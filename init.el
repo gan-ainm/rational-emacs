@@ -37,3 +37,5 @@
 (which-key-mode 1)
 
 (keymap-set evil-normal-state-map "C-," 'embark-act)
+(menu-bar-mode -1)
+(tool-bar-mode -1)
