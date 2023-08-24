@@ -14,6 +14,7 @@
 
 (add-to-list 'package-selected-packages 'magit)
 (add-to-list 'package-selected-packages 'doom-themes)
+(add-to-list 'package-selected-packages 'which-key)
              
 (package-install-selected-packages :noconfirm)
 
@@ -31,4 +32,8 @@
 (require 'doom-themes)
 
 (load-theme 'doom-solarized-dark t)
+
+(require 'which-key)
+(which-key-mode 1)
+
 (keymap-set evil-normal-state-map "C-," 'embark-act)
