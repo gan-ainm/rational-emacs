@@ -44,7 +44,7 @@
  '(ibuffer-movement-cycle nil t)
  '(ibuffer-old-time 24 t)
  '(kill-do-not-save-duplicates t)
- '(load-prefer-newer t t)
+ '(load-prefer-newer t)
  '(magit-save-repository-buffers 'dontask)
  '(marginalia-annotators
    '(marginalia-annotators-heavy marginalia-annotators-light nil) t)
