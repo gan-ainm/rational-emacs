@@ -29,8 +29,8 @@
 (require 'crafted-updates-config)
 
 (require 'magit)
-(require 'doom-themes)
 
+(require 'doom-themes)
 (load-theme 'doom-solarized-dark t)
 
 (require 'which-key)
