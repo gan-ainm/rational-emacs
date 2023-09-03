@@ -15,6 +15,8 @@
 (add-to-list 'package-selected-packages 'magit)
 (add-to-list 'package-selected-packages 'doom-themes)
 (add-to-list 'package-selected-packages 'which-key)
+(add-to-list 'package-selected-packages 'ement)
+(add-to-list 'package-selected-packages 'vterm)
              
 (package-install-selected-packages :noconfirm)
 
@@ -35,6 +37,9 @@
 
 (require 'which-key)
 (which-key-mode 1)
+
+(require 'ement)
+(require 'vterm)
 
 (keymap-set evil-normal-state-map "C-," 'embark-act)
 (menu-bar-mode -1)
