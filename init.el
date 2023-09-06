@@ -20,6 +20,10 @@
              
 (package-install-selected-packages :noconfirm)
 
+
+(package-vc-install 
+ '(org-timeblock :url "https://github.com/ichernyshovvv/org-timeblock/"))
+
 (require 'crafted-defaults-config)
 
 (require 'crafted-evil-config)
