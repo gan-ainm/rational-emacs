@@ -17,12 +17,15 @@
 (add-to-list 'package-selected-packages 'which-key)
 (add-to-list 'package-selected-packages 'ement)
 (add-to-list 'package-selected-packages 'vterm)
-             
+
 (package-install-selected-packages :noconfirm)
 
+(require 'package-vc)
 
-(package-vc-install 
- '(org-timeblock :url "https://github.com/ichernyshovvv/org-timeblock/"))
+(add-to-list 'package-vc-selected-packages
+  '(org-timeblock :url "https://github.com/ichernyshovvv/org-timeblock/"))
+
+(package-vc-install-selected-packages)
 
 (require 'crafted-defaults-config)
 
