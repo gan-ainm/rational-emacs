@@ -28,7 +28,7 @@
  '(corfu-cycle t)
  '(corfu-echo-documentation 0.25 t)
  '(custom-safe-themes
-   '("636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561" default))
+   '("4d4475c85408bbc9d71e692dd05d55c6b753d64847f5e364d1ebec78d43e2aef" "277a5bce12d6957dbabb43a2f55ee2b6371388b749cbb29fd251df19334a1f0b" "636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561" default))
  '(dired-auto-revert-buffer t)
  '(dired-dwim-target t)
  '(ediff-window-setup-function 'ediff-setup-windows-plain t)

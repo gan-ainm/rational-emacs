@@ -14,6 +14,8 @@
 
 (add-to-list 'package-selected-packages 'magit)
 (add-to-list 'package-selected-packages 'doom-themes)
+(add-to-list 'package-selected-packages 'modus-themes)
+(add-to-list 'package-selected-packages 'ef-themes)
 (add-to-list 'package-selected-packages 'which-key)
 (add-to-list 'package-selected-packages 'ement)
 (add-to-list 'package-selected-packages 'vterm)
@@ -39,8 +41,11 @@
 
 (require 'magit)
 
-(require 'doom-themes)
-(load-theme 'doom-solarized-dark t)
+;(require 'doom-themes)
+;(load-theme 'doom-solarized-dark t)
+;(require 'modus-themes)
+;(load-theme 'modus-vivendi-tinted)
+(load-theme 'ef-night)
 
 (require 'which-key)
 (which-key-mode 1)
