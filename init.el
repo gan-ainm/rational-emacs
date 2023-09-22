@@ -4,7 +4,7 @@
   (load custom-file nil :nomessage))
 
 (load "~/.local/share/crafted-emacs/modules/crafted-init-config")
-
+(setq debug-on-quit t)
 (require 'crafted-evil-packages)
 (require 'crafted-completion-packages)
 (require 'crafted-org-packages)
