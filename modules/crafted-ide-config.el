@@ -36,8 +36,8 @@ manually with something like this:
                    (not (eq 'lisp-mode mode))     ; prefer sly/slime
                    (not (eq 'scheme-mode mode))   ; prefer geiser
                    )
-          (let ((hook-name (concat (symbol-name mode) "-hook")))
-            (message (concat "adding eglot to " hook-name))
+          (let ((hook-name (format "%s-hook" (symbol-name mode))))
+            (message "adding eglot to %s" hook-name)
             (add-hook (intern hook-name) #'eglot-ensure))))))))
 
 ;; add eglot to existing programming modes when eglot is loaded.
@@ -61,7 +61,7 @@ tree-sitter for LANG-SYMBOL.
 Example: `(crafted-tree-sitter-load 'python)'"
       (tree-sitter-require lang-symbol)
       (let ((mode-hook-name
-             (intern (concat (symbol-name lang-symbol) "-mode-hook"))))
+             (intern (format "%s-mode-hook" (symbol-name lang-symbol)))))
         (add-hook mode-hook-name #'tree-sitter-mode)))))
 
 ;; Emacs versions after 29
@@ -93,12 +93,12 @@ Example: `(crafted-tree-sitter-load 'python)'"
 
 ;; enhance ibuffer with ibuffer-project if it is available.
 (when (require 'ibuffer-project nil :noerror)
-  (defun crafted-ide/enhance-ibuffer-with-ibuffer-project ()
+  (defun crafted-ide-enhance-ibuffer-with-ibuffer-project ()
     "Set up integration for `ibuffer' with `ibuffer-project'."
     (setq ibuffer-filter-groups (ibuffer-project-generate-filter-groups))
     (unless (eq ibuffer-sorting-mode 'project-file-relative)
       (ibuffer-do-sort-by-project-file-relative)))
-  (add-hook 'ibuffer-hook #'crafted-ide/enhance-ibuffer-with-ibuffer-project))
+  (add-hook 'ibuffer-hook #'crafted-ide-enhance-ibuffer-with-ibuffer-project))
 
 (provide 'crafted-ide-config)
 ;;; crafted-ide-config.el ends here
