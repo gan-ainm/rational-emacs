@@ -46,6 +46,9 @@
  '(kill-do-not-save-duplicates t)
  '(load-prefer-newer t t)
  '(magit-save-repository-buffers 'dontask)
+ '(major-mode-remap-alist
+   '((python-mode . python-ts-mode)
+     (bash-mode . bash-ts-mode)))
  '(marginalia-annotators
    '(marginalia-annotators-heavy marginalia-annotators-light nil) t)
  '(markdown-enable-html t)
