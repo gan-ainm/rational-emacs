@@ -4,7 +4,7 @@
   (load custom-file nil :nomessage))
 
 (load "~/.local/share/crafted-emacs/modules/crafted-init-config")
-(setq debug-on-quit t)
+;;; (setq debug-on-quit t)
 (require 'crafted-evil-packages)
 (require 'crafted-completion-packages)
 (require 'crafted-org-packages)
@@ -19,6 +19,11 @@
 (add-to-list 'package-selected-packages 'which-key)
 (add-to-list 'package-selected-packages 'ement)
 (add-to-list 'package-selected-packages 'vterm)
+(add-to-list 'package-selected-packages 'geiser)
+(add-to-list 'package-selected-packages 'geiser-guile)
+(add-to-list 'package-selected-packages 'lsp-mode)
+(add-to-list 'package-selected-packages 'rustic)
+(add-to-list 'package-selected-packages 'bufler)
 
 (package-install-selected-packages :noconfirm)
 
@@ -56,3 +61,16 @@
 (keymap-set evil-normal-state-map "C-," 'embark-act)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
+;;;
+;;; treesitter
+;;;
+(setq treesit-language-source-alist
+      '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+        (python "https://github.com/tree-sitter/tree-sitter-python")
+        (rust "https://github.com/tree-sitter/tree-sitter-rust")))
+;;;
+;;; lsp-mode
+;;;
+;; change keybinding (s-l is used for i3wm to switch to window right)
+(with-eval-after-load 'lsp-mode
+  (define-key lsp-mode-map (kbd "s-m") lsp-command-map))
