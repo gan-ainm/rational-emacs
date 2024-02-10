@@ -73,4 +73,4 @@
 ;;;
 ;; change keybinding (s-l is used for i3wm to switch to window right)
 (with-eval-after-load 'lsp-mode
-  (define-key lsp-mode-map (kbd "s-m") lsp-command-map))
+  (keymap-set lsp-mode-map "s-m" lsp-command-map))
