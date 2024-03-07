@@ -39,6 +39,8 @@
  '(evil-want-C-i-jump nil)
  '(evil-want-integration t)
  '(evil-want-keybinding nil)
+ '(fancy-splash-image
+   "/home/jmf/.local/share/crafted-emacs/system-crafters-logo.png")
  '(fast-but-imprecise-scrolling t)
  '(global-auto-revert-non-file-buffers t)
  '(ibuffer-movement-cycle nil t)

@@ -1,4 +1,5 @@
 ;; (setq debug-on-quit t)
+;; (setq debug-on-error t)
 ;;;
 ;;; load custom file
 ;;;
@@ -75,6 +76,7 @@
 (require 'crafted-workspaces-config)
 (require 'crafted-writing-config)
 (require 'crafted-updates-config)
+(require 'crafted-startup-config)
 
 (require 'magit)
 
