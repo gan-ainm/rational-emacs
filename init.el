@@ -49,6 +49,10 @@
 (add-to-list 'package-selected-packages 'bufler)
 ;; using PDFs with emacs
 (add-to-list 'package-selected-packages 'pdf-tools)
+;; some org enhancements
+(add-to-list 'package-selected-packages 'org-modern)
+(add-to-list 'package-selected-packages 'org-present)
+(add-to-list 'package-selected-packages 'org-roam)
 
 ;;;
 ;;; install all selected packages
@@ -71,7 +75,7 @@
 (require 'crafted-defaults-config)
 (require 'crafted-evil-config)
 (require 'crafted-completion-config)
-(require 'crafted-org-config)
+(require 'custom-org-config)
 (require 'crafted-ui-config)
 (require 'crafted-workspaces-config)
 (require 'crafted-writing-config)

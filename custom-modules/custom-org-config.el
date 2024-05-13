@@ -6,11 +6,12 @@
 ;; Keywords: lisp, convenience 
 ;;
 (require 'crafted-org-config)
+(setq org-roam-database-connector 'sqlite-builtin)
 (require 'org-roam)
 (require 'org-present)
-(require 'visual-fill-column)
 (require 'org-faces)
-(require 'org-superstar)
+;; (require 'org-superstar)
+(require 'org-modern)
 
 ;;;
 ;;; org
@@ -148,7 +149,7 @@
          (file+head "${slug}.org" "#+title: ${title}\n\n%i\n\n")
          :unnarrowed t)))
       
-;; If you're using a vertical completion framework, you might want a more inf;ormative completion interface
+;; If you're using a vertical completion framework, you might want a more informative completion interface
 (when (or (bound-and-true-p fido-vertical-mode)
           (bound-and-true-p icomplete-vertical-mode)
           (bound-and-true-p vertico))
@@ -169,7 +170,7 @@
 (org-roam-db-autosync-mode)
 
 ;; If using org-roam-protocol
-;;(require 'org-roam-protocol)
+(require 'org-roam-protocol)
   
 ;;;
 ;;; Org Present
