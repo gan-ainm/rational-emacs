@@ -10,3 +10,6 @@ bookmarks
 network-security.data
 quelpa/
 *~
+/org-roam.db
+/.lsp-session-v1
+/tree-sitter/
