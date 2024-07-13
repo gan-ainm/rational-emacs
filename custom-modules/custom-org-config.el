@@ -12,7 +12,6 @@
 (require 'org-faces)
 ;; (require 'org-superstar)
 (require 'org-modern)
-(require 'ol-git-link)
 
 ;;;
 ;;; org

@@ -63,6 +63,8 @@
  '(org-hide-emphasis-markers t)
  '(org-link-descriptive t)
  '(org-log-into-drawer t)
+ '(org-modules
+   '(ol-bbdb ol-bibtex ol-docview ol-doi ol-eww ol-gnus org-habit ol-info ol-irc ol-mhe ol-rmail ol-w3m ol-git-link))
  '(org-mouse-1-follows-link t)
  '(org-outline-path-complete-in-steps nil)
  '(org-priority-faces '((65 . "red")))
