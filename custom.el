@@ -81,7 +81,7 @@
      ("stable" . 70)
      ("melpa" . 0)))
  '(package-selected-packages
-   '(emacsql-sqlite-builtin org-present org-modern pdf-tools bufler rustic lsp-mode geiser-guile geiser ef-themes modus-themes breadcrumb org-timeblock org-ql vterm ement which-key doom-themes magit auctex-latexmk auctex pandoc-mode markdown-mode tabspaces helpful elisp-demos all-the-icons org-appear denote vertico orderless marginalia embark-consult embark corfu-terminal corfu consult cape evil-nerd-commenter evil-collection evil compat))
+   '(org-roam emacsql-sqlite-builtin org-present org-modern pdf-tools bufler rustic lsp-mode geiser-guile geiser ef-themes modus-themes breadcrumb org-timeblock org-ql vterm ement which-key doom-themes magit auctex-latexmk auctex pandoc-mode markdown-mode tabspaces helpful elisp-demos all-the-icons org-appear denote vertico orderless marginalia embark-consult embark corfu-terminal corfu consult cape evil-nerd-commenter evil-collection evil compat))
  '(package-vc-selected-packages
    '((org-timeblock :url "https://github.com/ichernyshovvv/org-timeblock/")))
  '(reftex-plug-into-AUCTeX t t)
