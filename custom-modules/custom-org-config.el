@@ -157,15 +157,15 @@
                           (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag))))
 
 ;; Key mappings
-(keymap-global-set "C-c a"    #'org-agenda)
-(keymap-global-set "C-c x"    #'org-capture)
-(keymap-global-set "C-c r l"  #'org-roam-buffer-toggle)
-(keymap-global-set "C-c r f"  #'org-roam-node-find)
-(keymap-global-set "C-c r g"  #'org-roam-graph)
-(keymap-global-set "C-c r i"  #'org-roam-insert)
-(keymap-global-set "C-c r c"  #'org-roam-capture)
-; Dailies
-(keymap-global-set "C-c r j"  #'org-roam-dailies-capture-today)
+(keymap-global-set       "C-c a"    #'org-agenda)
+(keymap-set org-mode-map "C-c L"    #'org-toggle-link-display)
+(keymap-global-set       "C-c x"    #'org-capture)
+(keymap-global-set       "C-c r c"  #'org-roam-capture)
+(keymap-global-set       "C-c r f"  #'org-roam-node-find)
+(keymap-global-set       "C-c r g"  #'org-roam-graph)
+(keymap-global-set       "C-c r i"  #'org-roam-insert)
+(keymap-global-set       "C-c r j"  #'org-roam-dailies-capture-today)
+(keymap-global-set       "C-c r l"  #'org-roam-buffer-toggle)
 
 (org-roam-db-autosync-mode)
 
