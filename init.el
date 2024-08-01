@@ -88,11 +88,14 @@
 ;;;
 ;;; theming
 ;;;
-;; (require 'doom-themes)
+(require 'doom-themes)
 ;; (load-theme 'doom-solarized-dark t)
 ;; (require 'modus-themes)
 ;; (load-theme 'modus-vivendi-tinted)
-(load-theme 'ef-night)
+;;(load-theme 'ef-night)
+(load-theme 'doom-one :no-confirm)
+(unless crafted-startup-inhibit-splash
+  (setq initial-buffer-choice #'crafted-startup-screen))
 
 ;; activate which-key
 (require 'which-key)
