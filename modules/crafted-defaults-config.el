@@ -1,6 +1,6 @@
 ;;; crafted-defaults.el --- Crafted Emacs Defaults -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2023
+;; Copyright (C) 2024
 ;; SPDX-License-Identifier: MIT
 
 ;; Author: System Crafters Community
@@ -17,6 +17,21 @@
 ;;   https://www.masteringemacs.org/article/demystifying-emacs-window-manager
 
 ;;; Code:
+
+;;; Customization Variables - See `M-x customize-group RET crafted-defaults'
+(defgroup crafted-defaults '()
+  "Customizations for Crafted Emacs - Defaults."
+  :tag "Crafted Defaults"
+  :group 'crafted)
+
+(defcustom crafted-windows-prefix-key "C-c w"
+  "Configure the prefix key for window movement bindings.
+
+Movement commands provided by `windmove' package, `winner-mode'
+also enables undo functionality if the window layout changes."
+  :group 'crafted-defaults
+  :type 'string)
+
 
 
 ;;; Buffers
@@ -160,18 +175,6 @@
 
 
 ;;; Window management
-(defgroup crafted-windows '()
-  "Window related configuration for Crafted Emacs."
-  :tag "Crafted Windows"
-  :group 'crafted)
-
-(defcustom crafted-windows-prefix-key "C-c w"
-  "Configure the prefix key for window movement bindings.
-
-Movement commands provided by `windmove' package, `winner-mode'
-also enables undo functionality if the window layout changes."
-  :group 'crafted-windows
-  :type 'string)
 
 ;; Turning on `winner-mode' provides an "undo" function for resetting
 ;; your window layout.  We bind this to `C-c w u' for winner-undo and
@@ -207,8 +210,7 @@ also enables undo functionality if the window layout changes."
 ;; Window configuration for special windows.
 (add-to-list 'display-buffer-alist
              '("\\*Help\\*"
-               (display-buffer-reuse-window display-buffer-pop-up-window)
-               (inhibit-same-window . t)))
+               (display-buffer-reuse-window display-buffer-pop-up-window)))
 
 (add-to-list 'display-buffer-alist
              '("\\*Completions\\*"
