@@ -18,7 +18,7 @@
 ;;;
 (require 'crafted-evil-packages)
 (require 'crafted-completion-packages)
-(require 'crafted-org-packages)
+(require 'custom-org-packages)
 (require 'crafted-ui-packages)
 (require 'crafted-workspaces-packages)
 (require 'crafted-writing-packages)
