@@ -49,11 +49,6 @@
 (add-to-list 'package-selected-packages 'bufler)
 ;; using PDFs with emacs
 (add-to-list 'package-selected-packages 'pdf-tools)
-;; some org enhancements
-(add-to-list 'package-selected-packages 'org-modern)
-(add-to-list 'package-selected-packages 'org-present)
-(add-to-list 'package-selected-packages 'org-roam)
-(add-to-list 'package-selected-packages 'org-contrib)
 
 ;;;
 ;;; install all selected packages
