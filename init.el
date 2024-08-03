@@ -71,6 +71,7 @@
 (require 'crafted-defaults-config)
 (require 'crafted-evil-config)
 (require 'crafted-completion-config)
+(require 'crafted-org-config)
 (require 'custom-org-config)
 (require 'crafted-ui-config)
 (require 'crafted-workspaces-config)

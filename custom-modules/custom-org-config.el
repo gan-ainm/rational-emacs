@@ -20,7 +20,6 @@
 (customize-set-variable 'org-agenda-files
                         (expand-file-name "agenda.files" org-directory))
 (customize-set-variable 'org-export-date-timestamp-format "%F")
-(customize-set-variable 'org-hide-emphasis-markers t)
 (customize-set-variable 'org-log-into-drawer t)
 (customize-set-variable 'org-outline-path-complete-in-steps nil)
 (customize-set-variable 'org-priority-faces (quote ((65 . "red"))))
@@ -31,8 +30,6 @@
 (customize-set-variable 'org-ellipsis " ▼")
 (customize-set-variable 'evil-auto-indent t)
 (customize-set-variable 'org-tags-column -77)
-
-(org-indent-mode 1)
 
 (defvar jmf/fixed-width-font "JetBrains Mono"
   "The font used for monospaced text.")
