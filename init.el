@@ -137,6 +137,14 @@
 ;;;
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 (add-hook 'python-ts-mode-hook #'eglot-ensure)
+
+;;;
+;;; Rust
+;;;
+(setq rustic-lsp-client 'eglot)
+(add-to-list 'major-mode-remap-alist '(rust-mode . rust-ts-mode))
+(add-hook 'rust-ts-mode-hook #'eglot-ensure)
+(add-hook 'eglot-managed-mode-hook (lambda() (flymake-mode -1)))
 ;;;
 ;;; activities
 ;;;
