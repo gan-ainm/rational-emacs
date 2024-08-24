@@ -114,32 +114,42 @@
 (setq org-roam-templates
       '(("d" "default" plain
          "- tags ::\n\n* %?"
-         :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n")
+         :if-new (file+head
+                  "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n")
          :unnarrowed t)
         ("l" "programming language" plain
          "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
          :unnarrowed t)
-        ("b" "book notes" plain (file "~/org/org-roam/templates/booknote.org")
-         :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Book")
+        ("b" "book notes" plain
+         (file "~/org/org-roam/templates/booknote.org")
+         :if-new (file+head
+                  "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Book")
          :unnarrowed t)
-        ("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-         :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
+        ("p" "project" plain
+         "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
+         :if-new (file+head
+                  "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
          :unnarrowed t))
       org-roam-capture-templates
       '(("d" "default" plain
          "- tags ::\n\n* %?"
-         :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n")
+         :if-new (file+head
+                  "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n")
          :unnarrowed t)
         ("l" "programming language" plain
          "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
          :unnarrowed t)
-        ("b" "book notes" plain (file "~/org/org-roam/templates/booknote.org")
-         :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Book")
+        ("b" "book notes" plain
+         (file "~/org/org-roam/templates/booknote.org")
+         :if-new (file+head
+                  "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Book")
          :unnarrowed t)
-        ("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-         :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
+        ("p" "project" plain
+         "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
+         :if-new (file+head
+                  "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
          :unnarrowed t))
       org-roam-capture-ref-templates
       '(("r" "ref" plain "%?" :target
@@ -151,7 +161,8 @@
           (bound-and-true-p icomplete-vertical-mode)
           (bound-and-true-p vertico))
   (customize-set-variable 'org-roam-node-display-template
-                          (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag))))
+                          (concat "${title:*} "
+                                  (propertize "${tags:10}" 'face 'org-tag))))
 
 ;; Key mappings
 (keymap-global-set       "C-c a"    #'org-agenda)
@@ -182,13 +193,14 @@
 
 (defun jmf/org-present-start ()
   ;; tweak font sizes
-  (setq-local face-remapping-alist '((default (:height 1.5) variable-pitch)
-                                     (header-line (:height 4.0) variable-pitch)
-                                     (org-document-title (:height 1.75) org-document-title)
-                                     (org-code (:height 1.5) org-code)
-                                     (org-verbatim (:height 1.5) org-verbatim)
-                                     (org-block (:height 1.25) org-block)
-                                     (org-block-begin-line (:height 0.7) org-block)))
+  (setq-local face-remapping-alist
+              '((default (:height 1.5) variable-pitch)
+                (header-line (:height 4.0) variable-pitch)
+                (org-document-title (:height 1.75) org-document-title)
+                (org-code (:height 1.5) org-code)
+                (org-verbatim (:height 1.5) org-verbatim)
+                (org-block (:height 1.25) org-block)
+                (org-block-begin-line (:height 0.7) org-block)))
   
   ;; set a blank header line string to create blank space at the top
   (setq header-line-format " ")
@@ -225,4 +237,6 @@
 (add-hook 'org-present-mode-quit-hook 'jmf/org-present-end)
 (add-hook 'org-present-after-navigate-functions 'jmf/org-present-prepare-slide)
 
+(with-eval-after-load 'outline
+  (add-hook 'ediff-prepare-buffer-hook #'show-all))
 (provide 'custom-org-config)
