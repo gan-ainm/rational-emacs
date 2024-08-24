@@ -49,6 +49,10 @@
 (add-to-list 'package-selected-packages 'bufler)
 ;; using PDFs with emacs
 (add-to-list 'package-selected-packages 'pdf-tools)
+;; restclient
+(add-to-list 'package-selected-packages 'restclient)
+(add-to-list 'package-selected-packages 'restclient-jq)
+(add-to-list 'package-selected-packages 'ob-restclient)
 ;; activities
 (add-to-list 'package-selected-packages 'activities)
 
