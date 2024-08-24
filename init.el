@@ -49,6 +49,8 @@
 (add-to-list 'package-selected-packages 'bufler)
 ;; using PDFs with emacs
 (add-to-list 'package-selected-packages 'pdf-tools)
+;; activities
+(add-to-list 'package-selected-packages 'activities)
 
 ;;;
 ;;; install all selected packages
@@ -129,3 +131,23 @@
 ;;;
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 (add-hook 'python-ts-mode-hook #'eglot-ensure)
+;;;
+;;; activities
+;;;
+(use-package activities
+  :init
+  (activities-mode 1)
+  (activities-tabs-mode 1)
+  ;; Prevent `edebug' default bindings from interfering.
+  (setq edebug-inhibit-emacs-lisp-mode-bindings t)
+  :bind
+  (("C-x C-a C-n" . activities-new)
+   ("C-x C-a C-d" . activities-define)
+   ("C-x C-a C-a" . activities-resume)
+   ("C-x C-a C-s" . activities-suspend)
+   ("C-x C-a C-k" . activities-kill)
+   ("C-x C-a RET" . activities-switch)
+   ("C-x C-a b" . activities-switch-buffer)
+   ("C-x C-a g" . activities-revert)
+   ("C-x C-a l" . activities-list)))
+
