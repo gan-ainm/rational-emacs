@@ -133,7 +133,7 @@
 
 (add-hook 'prog-mode-hook #'menu-bar--display-line-numbers-mode-relative)
 ;;;
-;;; python
+;;; Python
 ;;;
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 (add-hook 'python-ts-mode-hook #'eglot-ensure)
