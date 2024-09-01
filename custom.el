@@ -57,6 +57,7 @@
  '(markdown-enable-html t)
  '(markdown-enable-math t)
  '(org-agenda-files "/home/jmf/org/agenda.files")
+ '(org-babel-load-languages '((shell . t) (emacs-lisp . t)))
  '(org-directory "/home/jmf/org/")
  '(org-ellipsis " ▼")
  '(org-export-date-timestamp-format "%F" t)
