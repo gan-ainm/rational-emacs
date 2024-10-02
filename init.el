@@ -168,6 +168,106 @@
    ("C-x C-a l" . activities-list)))
 
 ;;;
+;;; mu4e & e-mail
+;;;
+(setq send-mail-function 'smtpmail-send-it
+      user-full-name "Gan Ainm"
+      user-mail-address "gan.ainm.riomhphost@gmail.com"
+      message-send-mail-function 'smtpmail-send-it
+      smtpmail-starttls-credentials '(("smtp.gmail.com" "587" nil nil))
+      smtpmail-auth-credentials (expand-file-name "~/.authinfo.gpg")
+      smtpmail-default-smtp-server "smtp.gmx.com"
+      starttls-extra-arguments nil
+      starttls-gnutls-program "/usr/bin/gnutls-cli"
+      starttls-extra-arguments nil
+      starttls-use-gnutls t)
+
+(use-package mu4e
+  ;; :ensure nil
+  :load-path "/usr/share/emacs/site-lisp/mu4e/"
+  ;; :defer 20 ; Wait until 20 seconds after startup
+  :config
+
+  ;; This is set to 't' to avoid mail syncing issues when using mbsync
+  (setq mu4e-change-filenames-when-moving t)
+
+  ;; Refresh mail using isync every 10 minutes
+  (setq mu4e-update-interval (* 10 60))
+  (setq mu4e-get-mail-command "/usr/bin/mbsync -a -c ~/.config/mbsync/config")
+  (setq mu4e-maildir "~/.local/share/Mail")
+  (setq mu4e-sent-folder "/GMX/Sent")
+  (setq mu4e-drafts-folder  "/GMX/Drafts")
+  (setq mu4e-refile-folder  "/GMX/Archives")
+  (setq mu4e-trash-folder  "/GMX/Trash")
+  (setq mu4e-user-mailing-lists
+        '((:list-id "dev.suckless.org"                               :name "suckless-dev")
+          (:list-id "wiki.suckless.org"                              :name "suckless-wiki")
+          (:list-id "1UOWK3I-11SY9YM.newsletterversand.zeit.de"      :name "ZEIT")
+          (:list-id "git-for-windows.googlegroups.com"               :name "git-windows")
+          (:list-id "newsletter.news.outdooractive.com.0sgsk-2s4.mj" :name "Outdooractive")
+          (:list-id "news.lists.systemcrafters.net"                  :name "SystemCrafters")
+          (:list-id "learningtoplayvim.buttondown.email"             :name "LearnPlayVim")
+          (:list-id "SystemCrafters/crafted-emacs"                   :name "crafted-emacs")))
+  (setq mu4e-headers-fields
+        '((:human-date . 12)
+          (:flags . 6)
+          (:from-or-to . 25)
+          (:mailing-list . 20)
+          (:subject)))
+  (add-hook 'mu4e-compose-pre-hook
+            (defun jmf/thunderbird-reply()
+              "Set quoting style to Thunderbird-like"
+              (setq message-cite-style message-cite-style-thunderbird)))
+
+  (setq mu4e-contexts
+        (list
+         (make-mu4e-context
+          :name "Personal"
+          :match-func
+          (lambda (msg)
+            (when msg
+              (string-prefix-p "/GMX" (mu4e-message-field msg :maildir))))
+          :vars '((user-mail-address . "jens@netfelderhoff.com")
+                  (user-full-name . "Jens Felderhoff")
+                  (smtpmail-smtp-server . "smtp.gmx.net")
+                  (smtpmail-smtp-service . 587)
+                  (smtpmail-debug-info . t)
+                  (mu4e-drafts-folder . "/GMX/Drafts")
+                  (mu4e-sent-folder . "/GMX/Sent")
+                  (mu4e-refile-folder . "/GMX/Archives")
+                  (mu4e-trash-folder . "/GMX/Trash")
+                  (mu4e-maildir-shortcuts . ((:maildir "/GMX/Inbox"     :key ?i)
+                                             (:maildir "/GMX/Sent"      :key ?s)
+                                             (:maildir "/GMX/Trash"     :key ?t)
+                                             (:maildir "/GMX/Drafts"    :key ?d)
+                                             (:maildir "/GMX/Archives"  :key ?a)))))
+         (make-mu4e-context
+          :name "Gan"
+          :match-func
+          (lambda (msg)
+            (when msg
+              (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
+          :vars '((user-mail-address . "gan.ainm.riomhphost@gmail.com")
+                  (user-full-name . "Gan Ainm")
+                  (smtpmail-smtp-server . "smtp.gmail.com")
+                  (smtpmail-smtp-service . 587)
+                  (smtpmail-debug-info . t)
+                  (mu4e-drafts-folder . "/Gmail/[Google Mail]/Drafts")
+                  (mu4e-sent-folder . "/Gmail/[Google Mail]/Sent Mail")
+                  (mu4e-refile-folder . "/Gmail/[Google Mail]/All Mail")
+                  (mu4e-trash-folder . "/Gmail/[Google Mail]/Trash")
+                  (mu4e-maildir-shortcuts . ((:maildir "/Gmail/Inbox"   :key ?i)
+                                             (:maildir "/Gmail/[Google Mail]/Sent"      :key ?s)
+                                             (:maildir "/Gmail/[Google Mail]/Trash"     :key ?t)
+                                             (:maildir "/Gmail/[Google Mail]/Drafts"    :key ?d)))))))
+
+  (setq mu4e-maildir-shortcuts
+        '((:maildir "/GMX/Inbox"     :key ?i)
+          (:maildir "/GMX/Sent"      :key ?s)
+          (:maildir "/GMX/Trash"     :key ?t)
+          (:maildir "/GMX/Drafts"    :key ?d)
+          (:maildir "/GMX/Archives"  :key ?a))))
+;;;
 ;;; dired-preview
 ;;;
 (require 'dired-preview)
