@@ -55,6 +55,8 @@
 (add-to-list 'package-selected-packages 'ob-restclient)
 ;; activities
 (add-to-list 'package-selected-packages 'activities)
+;; dired-preview
+(add-to-list 'package-selected-packages 'dired-preview)
 
 ;;;
 ;;; install all selected packages
@@ -165,3 +167,26 @@
    ("C-x C-a g" . activities-revert)
    ("C-x C-a l" . activities-list)))
 
+;;;
+;;; dired-preview
+;;;
+(require 'dired-preview)
+
+;; Default values for demo purposes
+(setq dired-preview-delay 0.7)
+(setq dired-preview-max-size (expt 2 20))
+(setq dired-preview-ignored-extensions-regexp
+        (concat "\\."
+                "\\(gz\\|"
+                "zst\\|"
+                "tar\\|"
+                "xz\\|"
+                "rar\\|"
+                "zip\\|"
+                "iso\\|"
+                "epub"
+                "\\)"))
+
+;; Enable `dired-preview-mode' in a given Dired buffer or do it
+;; globally:
+(dired-preview-global-mode 1)
