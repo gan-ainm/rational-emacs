@@ -106,6 +106,15 @@
          (file+headline "inbox.org" "WEB captures")
          "* %:annotation\n\n%i\n%?\n%U"
          :empty-lines 1))))
+
+(setq org-agenda-custom-commands
+      '(("p" "Planning"
+         ((tags-todo "+@planning"
+                     ((org-agenda-overriding-header "Planning Tasks")))
+          (tags-todo "-{.*}"
+                     ((org-agenda-overriding-header "Untagged Tasks")))
+          (todo ".*" ((org-agenda-files '("~/org/inbox.org"))
+                      (org-agenda-overriding-header "Unprocessed Inbox Items")))))))
 ;;;
 ;;; org-roam
 ;;;
