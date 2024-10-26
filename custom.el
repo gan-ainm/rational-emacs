@@ -56,6 +56,19 @@
    '(marginalia-annotators-heavy marginalia-annotators-light nil) t)
  '(markdown-enable-html t)
  '(markdown-enable-math t)
+ '(org-agenda-custom-commands
+   '(("p" "Planning"
+      ((tags-todo "+@planning"
+                  ((org-agenda-overriding-header "Planning Tasks")))
+       (tags-todo "-{.*}"
+                  ((org-agenda-overriding-header "Untagged Tasks")))
+       (todo ".*"
+             ((org-agenda-files
+               '("~/org/inbox.org"))
+              (org-agenda-overriding-header "Unprocessed Inbox Items")))))
+     ("d" "Daily Agenda"
+      ((agenda ""
+               ((org-agenda-span 'day)))))))
  '(org-agenda-files "/home/jmf/org/agenda.files")
  '(org-babel-load-languages '((shell . t) (emacs-lisp . t)))
  '(org-directory "/home/jmf/org/")
