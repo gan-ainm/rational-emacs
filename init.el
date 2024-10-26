@@ -290,3 +290,40 @@
 ;; Enable `dired-preview-mode' in a given Dired buffer or do it
 ;; globally:
 (dired-preview-global-mode 1)
+
+;;;
+;;; Magit
+;;;
+
+;; handling dotfiles repo
+(setq jmf/dotfile-dirs-list
+      (mapcar
+       (lambda (d)
+                (file-name-as-directory (expand-file-name d "~/.config")))
+              '("~/"
+                "Emacs_from_Scratch"
+                "X11"
+                "chemacs"
+                "doom"
+                "i3"
+                "i3status"
+                "pulse"
+                "vim"
+                "yapf"
+                "zsh"
+                "~/.local/share/oh-my-zsh/custom"
+                "~/bin")))
+
+(defun jmf/magit-process-environment (env)
+  "Add GIT_DIR and GIT_WORK_TREE to ENV when in a special directory.
+https://github.com/magit/magit/issues/460 (@cpitclaudel)."
+  (let ((default (file-name-as-directory (expand-file-name default-directory))))
+    (when (member default jmf/dotfile-dirs-list)
+      (let ((gitdir (expand-file-name "~/.local/share/dotfiles/"))
+            (home (expand-file-name "~/")))
+        (push (format "GIT_WORK_TREE=%s" home) env)
+        (push (format "GIT_DIR=%s" gitdir) env))))
+  env)
+
+(advice-add 'magit-process-environment
+            :filter-return #'jmf/magit-process-environment)
