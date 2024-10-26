@@ -163,9 +163,9 @@
    ("C-x C-a C-s" . activities-suspend)
    ("C-x C-a C-k" . activities-kill)
    ("C-x C-a RET" . activities-switch)
-   ("C-x C-a b" . activities-switch-buffer)
-   ("C-x C-a g" . activities-revert)
-   ("C-x C-a l" . activities-list)))
+   ("C-x C-a b"   . activities-switch-buffer)
+   ("C-x C-a g"   . activities-revert)
+   ("C-x C-a l"   . activities-list)))
 
 ;;;
 ;;; mu4e & e-mail
