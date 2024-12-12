@@ -182,7 +182,7 @@
 (keymap-global-set       "C-c r c"  #'org-roam-capture)
 (keymap-global-set       "C-c r f"  #'org-roam-node-find)
 (keymap-global-set       "C-c r g"  #'org-roam-graph)
-(keymap-global-set       "C-c r i"  #'org-roam-insert)
+(keymap-global-set       "C-c r i"  #'org-roam-node-insert)
 (keymap-global-set       "C-c r j"  #'org-roam-dailies-capture-today)
 (keymap-global-set       "C-c r l"  #'org-roam-buffer-toggle)
 
