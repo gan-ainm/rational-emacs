@@ -69,7 +69,7 @@
   (set-face-attribute 'default nil :font jmf/fixed-width-font :weight 'light :height 100)
   (set-face-attribute 'fixed-pitch nil :font jmf/fixed-width-font :weight 'light :height 1.0)
   (set-face-attribute 'variable-pitch nil :font jmf/variable-width-font :weight 'light :height 1.0)
-  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-block nil :foreground 'unspecified :inherit 'fixed-pitch)
   (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
   (set-face-attribute 'org-formula nil :inherit 'fixed-pitch)
   (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
