@@ -13,6 +13,7 @@
 
 ;; conventions and grep instead.
 (add-to-list 'package-selected-packages 'org-roam)
+(add-to-list 'package-selected-packages 'org-roam-ui)
 
 ;;; Toggle the visibility of some Org elements.
 (add-to-list 'package-selected-packages 'org-appear)
