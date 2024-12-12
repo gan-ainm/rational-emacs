@@ -31,15 +31,15 @@
 (customize-set-variable 'evil-auto-indent t)
 (customize-set-variable 'org-tags-column -77)
 (customize-set-variable 'org-agenda-custom-commands
-      '(("p" "Planning"
-         ((tags-todo "+@planning"
-                     ((org-agenda-overriding-header "Planning Tasks")))
-          (tags-todo "-{.*}"
-                     ((org-agenda-overriding-header "Untagged Tasks")))
-          (todo ".*" ((org-agenda-files '("~/org/inbox.org"))
-                      (org-agenda-overriding-header "Unprocessed Inbox Items")))))
-        ("d" "Daily Agenda"
-         ((agenda "" ((org-agenda-span 'day)))))))
+                        '(("p" "Planning"
+                           ((tags-todo "+@planning"
+                                       ((org-agenda-overriding-header "Planning Tasks")))
+                            (tags-todo "-{.*}"
+                                       ((org-agenda-overriding-header "Untagged Tasks")))
+                            (todo ".*" ((org-agenda-files '("~/org/inbox.org"))
+                                        (org-agenda-overriding-header "Unprocessed Inbox Items")))))
+                          ("d" "Daily Agenda"
+                           ((agenda "" ((org-agenda-span 'day)))))))
 
 (defvar jmf/fixed-width-font "JetBrains Mono"
   "The font used for monospaced text.")

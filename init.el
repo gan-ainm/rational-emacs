@@ -57,7 +57,11 @@
 (add-to-list 'package-selected-packages 'activities)
 ;; dired-preview
 (add-to-list 'package-selected-packages 'dired-preview)
+;; ansible
 
+(add-to-list 'package-selected-packages 'ansible)
+(add-to-list 'package-selected-packages 'ansible-doc)
+(add-to-list 'package-selected-packages 'ansible-vault)
 ;;;
 ;;; install all selected packages
 ;;;
