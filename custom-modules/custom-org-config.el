@@ -5,13 +5,78 @@
 ;; Author: Gan Ainm <gan.ainm.riomhphost@gmail.com>
 ;; Keywords: lisp, convenience 
 ;;
-(require 'crafted-org-config)
-(setq org-roam-database-connector 'sqlite-builtin)
-(require 'org-roam)
-(require 'org-present)
-(require 'org-faces)
+(use-package crafted-org-config)
+(use-package org-roam
+  :init
+  (setq org-roam-database-connector 'sqlite-builtin)
+  :config
+  (customize-set-variable 'org-roam-directory
+                          (expand-file-name "org-roam/" org-directory))
+  (setq org-roam-templates
+        '(("d" "default" plain
+           "- tags ::\n\n* %?"
+           :if-new (file+head
+                    "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n")
+           :unnarrowed t)
+          ("l" "programming language" plain
+           "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+           :unnarrowed t)
+          ("b" "book notes" plain
+           (file "~/org/org-roam/templates/booknote.org")
+           :if-new (file+head
+                    "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Book")
+           :unnarrowed t)
+          ("p" "project" plain
+           "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
+           :if-new (file+head
+                    "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
+           :unnarrowed t))
+        org-roam-capture-templates
+        '(("d" "default" plain
+           "- tags ::\n\n* %?"
+           :if-new (file+head
+                    "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n")
+           :unnarrowed t)
+          ("l" "programming language" plain
+           "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+           :unnarrowed t)
+          ("b" "book notes" plain
+           (file "~/org/org-roam/templates/booknote.org")
+           :if-new (file+head
+                    "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Book")
+           :unnarrowed t)
+          ("p" "project" plain
+           "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
+           :if-new (file+head
+                    "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
+           :unnarrowed t))
+        org-roam-capture-ref-templates
+        '(("r" "ref" plain "%?" :target
+           (file+head "${slug}.org" "#+title: ${title}\n\n%i\n\n")
+           :unnarrowed t)))
+  
+  (org-roam-db-autosync-mode)
+
+  ;; If you're using a vertical completion framework, you might want a more informative completion interface
+  (when (or (bound-and-true-p fido-vertical-mode)
+            (bound-and-true-p icomplete-vertical-mode)
+            (bound-and-true-p vertico))
+    (customize-set-variable 'org-roam-node-display-template
+                            (concat "${title:*} "
+                                    (propertize "${tags:10}" 'face 'org-tag))))
+  :bind (("C-c r c" . org-roam-capture)
+         ("C-c r f" . org-roam-node-find)
+         ("C-c r g" . org-roam-graph)
+         ("C-c r i" . org-roam-node-insert)
+         ("C-c r j" . org-roam-dailies-capture-today)
+         ("C-c r l" . org-roam-buffer-toggle)))
+
+(use-package org-present)
+(use-package org-faces)
 ;; (require 'org-superstar)
-(require 'org-modern)
+(use-package org-modern)
 
 ;;;
 ;;; org
@@ -117,77 +182,11 @@
          "* %:annotation\n\n%i\n%?\n%U"
          :empty-lines 1))))
 
-;;;
-;;; org-roam
-;;;
-(customize-set-variable 'org-roam-directory
-                        (expand-file-name "org-roam/" org-directory))
-(setq org-roam-templates
-      '(("d" "default" plain
-         "- tags ::\n\n* %?"
-         :if-new (file+head
-                  "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n")
-         :unnarrowed t)
-        ("l" "programming language" plain
-         "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
-         :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-         :unnarrowed t)
-        ("b" "book notes" plain
-         (file "~/org/org-roam/templates/booknote.org")
-         :if-new (file+head
-                  "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Book")
-         :unnarrowed t)
-        ("p" "project" plain
-         "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-         :if-new (file+head
-                  "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
-         :unnarrowed t))
-      org-roam-capture-templates
-      '(("d" "default" plain
-         "- tags ::\n\n* %?"
-         :if-new (file+head
-                  "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n")
-         :unnarrowed t)
-        ("l" "programming language" plain
-         "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
-         :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-         :unnarrowed t)
-        ("b" "book notes" plain
-         (file "~/org/org-roam/templates/booknote.org")
-         :if-new (file+head
-                  "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Book")
-         :unnarrowed t)
-        ("p" "project" plain
-         "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-         :if-new (file+head
-                  "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
-         :unnarrowed t))
-      org-roam-capture-ref-templates
-      '(("r" "ref" plain "%?" :target
-         (file+head "${slug}.org" "#+title: ${title}\n\n%i\n\n")
-         :unnarrowed t)))
-      
-;; If you're using a vertical completion framework, you might want a more informative completion interface
-(when (or (bound-and-true-p fido-vertical-mode)
-          (bound-and-true-p icomplete-vertical-mode)
-          (bound-and-true-p vertico))
-  (customize-set-variable 'org-roam-node-display-template
-                          (concat "${title:*} "
-                                  (propertize "${tags:10}" 'face 'org-tag))))
 
 ;; Key mappings
 (keymap-global-set       "C-c a"    #'org-agenda)
 (keymap-set org-mode-map "C-c L"    #'org-toggle-link-display)
 (keymap-global-set       "C-c x"    #'org-capture)
-(keymap-global-set       "C-c r c"  #'org-roam-capture)
-(keymap-global-set       "C-c r f"  #'org-roam-node-find)
-(keymap-global-set       "C-c r g"  #'org-roam-graph)
-(keymap-global-set       "C-c r i"  #'org-roam-node-insert)
-(keymap-global-set       "C-c r j"  #'org-roam-dailies-capture-today)
-(keymap-global-set       "C-c r l"  #'org-roam-buffer-toggle)
-
-(org-roam-db-autosync-mode)
-
 ;; If using org-roam-protocol
 (require 'org-roam-protocol)
   
