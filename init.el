@@ -62,6 +62,7 @@
 (add-to-list 'package-selected-packages 'ansible)
 (add-to-list 'package-selected-packages 'ansible-doc)
 (add-to-list 'package-selected-packages 'ansible-vault)
+(add-to-list 'package-selected-packages 'nov)
 ;;;
 ;;; install all selected packages
 ;;;
