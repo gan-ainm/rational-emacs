@@ -63,6 +63,7 @@
 (add-to-list 'package-selected-packages 'ansible-doc)
 (add-to-list 'package-selected-packages 'ansible-vault)
 (add-to-list 'package-selected-packages 'nov)
+(add-to-list 'package-selected-packages 'csv-mode)
 ;;;
 ;;; install all selected packages
 ;;;
@@ -341,3 +342,5 @@ https://github.com/magit/magit/issues/460 (@cpitclaudel)."
 
 (advice-add 'magit-process-environment
             :filter-return #'jmf/magit-process-environment)
+
+(use-package csv-mode)
