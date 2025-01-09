@@ -284,12 +284,13 @@
 ;;;
 ;;; dired-preview
 ;;;
-(require 'dired-preview)
+(use-package dired-preview
 
-;; Default values for demo purposes
-(setq dired-preview-delay 0.7)
-(setq dired-preview-max-size (expt 2 20))
-(setq dired-preview-ignored-extensions-regexp
+  :config
+  ;; Default values for demo purposes
+  (setq dired-preview-delay 0.7
+        dired-preview-max-size (expt 2 20)
+        dired-preview-ignored-extensions-regexp
         (concat "\\."
                 "\\(gz\\|"
                 "zst\\|"
@@ -301,10 +302,9 @@
                 "epub"
                 "\\)"))
 
-;; Enable `dired-preview-mode' in a given Dired buffer or do it
-;; globally:
-(dired-preview-global-mode 1)
-
+  ;; Enable `dired-preview-mode' in a given Dired buffer or do it
+  ;; globally:
+  (dired-preview-global-mode 1))
 ;;;
 ;;; Magit
 ;;;
