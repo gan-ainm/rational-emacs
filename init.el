@@ -173,6 +173,15 @@
    ("C-x C-a l"   . activities-list)))
 
 ;;;
+;;; epa
+;;;
+(defun jmf/lookup-password (&rest keys)
+  (let ((result (apply #'auth-source-search keys)))
+    (if result
+        (funcall (plist-get (car result) :secret))
+      nil)))
+
+;;;
 ;;; mu4e & e-mail
 ;;;
 (setq send-mail-function 'smtpmail-send-it
