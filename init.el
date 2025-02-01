@@ -186,16 +186,16 @@
 ;;; mu4e & e-mail
 ;;;
 (setq send-mail-function 'smtpmail-send-it
-      user-full-name "Gan Ainm"
-      user-mail-address "gan.ainm.riomhphost@gmail.com"
-      message-send-mail-function 'smtpmail-send-it
+      user-full-name                "Gan Ainm"
+      user-mail-address             "gan.ainm.riomhphost@gmail.com"
+      message-send-mail-function    'smtpmail-send-it
       smtpmail-starttls-credentials '(("smtp.gmail.com" "587" nil nil))
-      smtpmail-auth-credentials (expand-file-name "~/.authinfo.gpg")
-      smtpmail-default-smtp-server "smtp.gmx.com"
-      starttls-extra-arguments nil
-      starttls-gnutls-program "/usr/bin/gnutls-cli"
-      starttls-extra-arguments nil
-      starttls-use-gnutls t)
+      smtpmail-auth-credentials     (expand-file-name "~/.authinfo.gpg")
+      smtpmail-default-smtp-server  "smtp.gmx.com"
+      starttls-extra-arguments      nil
+      starttls-gnutls-program       "/usr/bin/gnutls-cli"
+      starttls-extra-arguments      nil
+      starttls-use-gnutls           t)
 
 (use-package mu4e
   ;; :ensure nil
