@@ -128,52 +128,64 @@
                             ("d" "Daily Agenda"
                              ((agenda "" ((org-agenda-span 'day)))))))
 
+  (customize-set-variable 'org-capture-templates
+                          '(("n" "Note" entry
+                             (file+headline "inbox.org" "NOTES")
+                             "* %^{Title}\n%?\n\n%a"
+                             :empty-lines 1)
+
+                            ("j" "Journal entry templates")
+                            ("jp" "Private journal" entry
+                             (file+olp+datetree "journal.org" "JOURNAL")
+                             "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
+                             :empty-lines 1)
+                            ("jw" "Work journal" entry
+                             (file+olp+datetree "work/journal.org")
+                             "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
+                             :empty-lines 1)
+
+                            ("t" "Todo" entry
+                             (file+headline "inbox.org" "TASKS")
+                             "* TODO %^{What?}\n%?\n\n%a"
+                             :empty-lines 1)
+
+                            ("c" "Daily todo checklist" checkitem
+                             (file+olp+datetree "daily.org")
+                             "[ ] %^{What?}\n%i\n\n%a"
+                             :empty-lines 1)
+
+                            ("b" "Book entry templates")
+                            ("bf" "Fiction" entry
+                             (file+olp "todo.org"
+                                       "Reading" "Books" "Fiction")
+                             "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
+                            ("bn" "Non-Fiction" entry
+                             (file+olp "todo.org" "Reading" "Books" "Non-Fiction")
+                             "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
+
+                            ("x" "Web capture" entry
+                             (file+headline "inbox.org" "WEB captures")
+                             "* %:annotation\n\n%i\n%?\n%U"
+                             :empty-lines 1)))
   (setq visual-fill-column-width 110
-        visual-fill-column-center-text t
-        org-capture-templates '(("n" "Note" entry
-                                 (file+headline "inbox.org" "NOTES")
-                                 "* %^{Title}\n%?\n\n%a"
-                                 :empty-lines 1)
-
-                                ("j" "Journal entry templates")
-                                ("jp" "Private journal" entry
-                                 (file+olp+datetree "journal.org" "JOURNAL")
-                                 "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
-                                 :empty-lines 1)
-                                ("jw" "Work journal" entry
-                                 (file+olp+datetree "work/journal.org")
-                                 "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
-                                 :empty-lines 1)
-
-                                ("t" "Todo" entry
-                                 (file+headline "inbox.org" "TASKS")
-                                 "* TODO %^{What?}\n%?\n\n%a"
-                                 :empty-lines 1)
-
-                                ("c" "Daily todo checklist" checkitem
-                                 (file+olp+datetree "daily.org")
-                                 "[ ] %^{What?}\n%i\n\n%a"
-                                 :empty-lines 1)
-
-                                ("b" "Book entry templates")
-                                ("bf" "Fiction" entry
-                                 (file+olp "todo.org"
-                                           "Reading" "Books" "Fiction")
-                                 "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
-                                ("bn" "Non-Fiction" entry
-                                 (file+olp "todo.org" "Reading" "Books" "Non-Fiction")
-                                 "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
-
-                                ("x" "Web capture" entry
-                                 (file+headline "inbox.org" "WEB captures")
-                                 "* %:annotation\n\n%i\n%?\n%U"
-                                 :empty-lines 1)))
+        visual-fill-column-center-text t)
 
   :bind (("C-c a" . org-agenda)
          ("C-c x" . org-capture)
          :map org-mode-map
          ("C-c L" . org-toggle-link-display)
-         ("C-c l" . org-store-link)))
+         ("C-c l" . org-store-link)
+         ("C-M-i" . completion-at-point)))
+
+;;;
+;;; evil-org
+;;;
+(use-package evil-org
+  :after org
+  :hook (org-mode . (lambda () evil-org-mode))
+  :config
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
 
 ;;;
 ;;; org-roam
@@ -182,9 +194,15 @@
   :init
   (setq org-roam-database-connector 'sqlite-builtin)
   :config
+  (defun jmf/org-roam-capture-inbox ()
+    (interactive)
+    (org-roam-capture- :node (org-roam-node-create)
+                       :templates '(("i" "inbox" plain "* %?"
+                                    :if-new (file+head "Inbox.org" "#+title: Inbox\n")))))
+
   (customize-set-variable 'org-roam-directory
                           (expand-file-name "org-roam/" org-directory))
-  (setq org-roam-templates
+  (customize-set-variable 'org-roam-capture-templates
         '(("d" "default" plain
            "- tags ::\n\n* %?"
            :if-new (file+head
@@ -202,37 +220,19 @@
                     "%<%Y%m%d%H%M%S>-${slug}.org"
                     "#+title: ${title}\n#+filetags: Book")
            :unnarrowed t)
-          ("p" "project" plain
-           "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
+          ("v" "video notes" plain
+           (file "~/org/org-roam/templates/videonote.org")
            :if-new (file+head
                     "%<%Y%m%d%H%M%S>-${slug}.org"
-                    "#+title: ${title}\n#+filetags: Project")
-           :unnarrowed t))
-        org-roam-capture-templates
-        '(("d" "default" plain
-           "- tags ::\n\n* %?"
-           :if-new (file+head
-                    "%<%Y%m%d%H%M%S>-${slug}.org"
-                    "#+title: ${title}\n#+date: %U\n")
-           :unnarrowed t)
-          ("l" "programming language" plain
-           "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                              "#+title: ${title}\n")
-           :unnarrowed t)
-          ("b" "book notes" plain
-           (file "~/org/org-roam/templates/booknote.org")
-           :if-new (file+head
-                    "%<%Y%m%d%H%M%S>-${slug}.org"
-                    "#+title: ${title}\n#+filetags: Book")
+                    "#+title: ${title}")
            :unnarrowed t)
           ("p" "project" plain
            "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
            :if-new (file+head
                     "%<%Y%m%d%H%M%S>-${slug}.org"
                     "#+title: ${title}\n#+filetags: Project")
-           :unnarrowed t))
-        org-roam-capture-ref-templates
+           :unnarrowed t)))
+        (customize-set-variable 'org-roam-capture-ref-templates
         '(("r" "ref" plain "%?" :target
            (file+head "${slug}.org" "#+title: ${title}\n\n%i\n\n")
            :unnarrowed t)))
@@ -247,7 +247,8 @@
     (customize-set-variable 'org-roam-node-display-template
                             (concat "${title:*} "
                                     (propertize "${tags:10}" 'face 'org-tag))))
-  :bind (("C-c r c" . org-roam-capture)
+  :bind (("C-c r b" . jmf/org-roam-capture-inbox)
+         ("C-c r c" . org-roam-capture)
          ("C-c r f" . org-roam-node-find)
          ("C-c r g" . org-roam-graph)
          ("C-c r i" . org-roam-node-insert)
@@ -320,6 +321,9 @@
 (with-eval-after-load 'outline
   (add-hook 'ediff-prepare-buffer-hook #'show-all))
 
+(use-package ob-mermaid
+  :config
+  (setq ob-mermaid-cli-path "/usr/bin/mmdc"))
 ;;;
 ;;; Prot's popup frames
 ;;;

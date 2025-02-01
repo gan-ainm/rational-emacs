@@ -23,5 +23,9 @@
 (add-to-list 'package-selected-packages 'org-present)
 (add-to-list 'package-selected-packages 'org-contrib)
 
+;; more evil
+(add-to-list 'package-selected-packages 'evil-org)
+
+
 (provide 'custom-org-packages)
 ;;; crafted-org-packages.el ends here

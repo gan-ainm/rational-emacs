@@ -70,7 +70,39 @@
       ((agenda ""
                ((org-agenda-span 'day)))))))
  '(org-agenda-files "/home/jmf/org/agenda.files")
- '(org-babel-load-languages '((shell . t) (emacs-lisp . t)))
+ '(org-babel-load-languages
+   '((shell . t)
+     (emacs-lisp . t)
+     (C . t)
+     (python . t)
+     (awk . t)))
+ '(org-capture-templates
+   '(("n" "Note" entry
+      (file+headline "inbox.org" "NOTES")
+      "* %^{Title}\12%?\12\12%a" :empty-lines 1)
+     ("j" "Journal entry templates")
+     ("jp" "Private journal" entry
+      (file+olp+datetree "journal.org" "JOURNAL")
+      "* %^{Title}\12[%<%R%z>]\12\12%?\12\12%a" :empty-lines 1)
+     ("jw" "Work journal" entry
+      (file+olp+datetree "work/journal.org")
+      "* %^{Title}\12[%<%R%z>]\12\12%?\12\12%a" :empty-lines 1)
+     ("t" "Todo" entry
+      (file+headline "inbox.org" "TASKS")
+      "* TODO %^{What?}\12%?\12\12%a" :empty-lines 1)
+     ("c" "Daily todo checklist" checkitem
+      (file+olp+datetree "daily.org")
+      "[ ] %^{What?}\12%i\12\12%a" :empty-lines 1)
+     ("b" "Book entry templates")
+     ("bf" "Fiction" entry
+      (file+olp "todo.org" "Reading" "Books" "Fiction")
+      "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\12\12%?")
+     ("bn" "Non-Fiction" entry
+      (file+olp "todo.org" "Reading" "Books" "Non-Fiction")
+      "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\12\12%?")
+     ("x" "Web capture" entry
+      (file+headline "inbox.org" "WEB captures")
+      "* %:annotation\12\12%i\12%?\12%U" :empty-lines 1)))
  '(org-directory "/home/jmf/org/")
  '(org-ellipsis " ▼")
  '(org-export-date-timestamp-format "%F" t)
@@ -86,6 +118,30 @@
  '(org-refile-targets '((org-agenda-files :maxlevel . 6)))
  '(org-refile-use-outline-path 'file)
  '(org-return-follows-link t)
+ '(org-roam-capture-ref-templates
+   '(("r" "ref" plain "%?" :target
+      (file+head "${slug}.org" "#+title: ${title}\12\12%i\12\12")
+      :unnarrowed t)))
+ '(org-roam-capture-templates
+   '(("d" "default" plain "- tags ::\12\12* %?" :if-new
+      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\12#+date: %U\12")
+      :unnarrowed t)
+     ("l" "programming language" plain "* Characteristics\12\12- Family: %?\12- Inspired by: \12\12* Reference:\12\12" :if-new
+      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\12")
+      :unnarrowed t)
+     ("b" "book notes" plain
+      (file "~/org/org-roam/templates/booknote.org")
+      :if-new
+      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\12#+filetags: Book")
+      :unnarrowed t)
+     ("v" "video notes" plain
+      (file "~/org/org-roam/templates/videonote.org")
+      :if-new
+      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}")
+      :unnarrowed t)
+     ("p" "project" plain "* Goals\12\12%?\12\12* Tasks\12\12** TODO Add initial tasks\12\12* Dates\12\12" :if-new
+      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\12#+filetags: Project")
+      :unnarrowed t)))
  '(org-roam-directory "/home/jmf/org/org-roam/")
  '(org-src-preserve-indentation nil)
  '(org-tags-column -77)
@@ -95,7 +151,7 @@
      ("stable" . 70)
      ("melpa" . 0)))
  '(package-selected-packages
-   '(org-roam emacsql-sqlite-builtin org-present org-modern pdf-tools bufler rustic lsp-mode geiser-guile geiser ef-themes modus-themes breadcrumb org-timeblock org-ql vterm ement which-key doom-themes magit auctex-latexmk auctex pandoc-mode markdown-mode tabspaces helpful elisp-demos all-the-icons org-appear denote vertico orderless marginalia embark-consult embark corfu-terminal corfu consult cape evil-nerd-commenter evil-collection evil compat))
+   '(evil-org org-roam emacsql-sqlite-builtin org-present org-modern pdf-tools bufler rustic lsp-mode geiser-guile geiser ef-themes modus-themes breadcrumb org-timeblock org-ql vterm ement which-key doom-themes magit auctex-latexmk auctex pandoc-mode markdown-mode tabspaces helpful elisp-demos all-the-icons org-appear denote vertico orderless marginalia embark-consult embark corfu-terminal corfu consult cape evil-nerd-commenter evil-collection evil compat))
  '(package-vc-selected-packages
    '((org-timeblock :url "https://github.com/ichernyshovvv/org-timeblock/")))
  '(reftex-plug-into-AUCTeX t t)
