@@ -1,3 +1,5 @@
+;;; debug toggles (by uncommenting)
+
 ;; (setq debug-on-quit t)
 ;; (setq debug-on-error t)
 
@@ -19,20 +21,23 @@
 ;;;
 (require 'crafted-evil-packages)
 (require 'crafted-completion-packages)
-(require 'custom-org-packages)
 (require 'crafted-ui-packages)
 (require 'crafted-workspaces-packages)
 (require 'crafted-writing-packages)
+
+(require 'custom-org-packages)
 
 ;;;
 ;;; this is the personal choice of package selections
 ;;;
 ;; the ingenious Git frontend
 (add-to-list 'package-selected-packages 'magit)
+
 ;; theming
 (add-to-list 'package-selected-packages 'doom-themes)
 (add-to-list 'package-selected-packages 'modus-themes)
 (add-to-list 'package-selected-packages 'ef-themes)
+
 ;; dynamic completion aid for keychords
 (add-to-list 'package-selected-packages 'which-key)
 ;; the Matrix client

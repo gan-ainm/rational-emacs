@@ -1,4 +1,4 @@
-;;; crafted-org-packages.el --- Crafted Org Packages  -*- lexical-binding: t; -*-
+;;; custom-org-packages.el --- Custom Org Packages  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2022
 ;; SPDX-License-Identifier: MIT
@@ -15,9 +15,6 @@
 (add-to-list 'package-selected-packages 'org-roam)
 (add-to-list 'package-selected-packages 'org-roam-ui)
 
-;;; Toggle the visibility of some Org elements.
-(add-to-list 'package-selected-packages 'org-appear)
-
 ;; some org enhancements
 (add-to-list 'package-selected-packages 'org-modern)
 (add-to-list 'package-selected-packages 'org-present)
@@ -26,6 +23,8 @@
 ;; more evil
 (add-to-list 'package-selected-packages 'evil-org)
 
+;;; Toggle the visibility of some Org elements.
+(add-to-list 'package-selected-packages 'org-appear)
 
 (provide 'custom-org-packages)
 ;;; crafted-org-packages.el ends here

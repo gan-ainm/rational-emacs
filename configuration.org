@@ -8,7 +8,6 @@
 If something goes wrong, quickly uncomment the prepared debug settings.
 
 #+begin_src emacs-lisp
-
   ;;; debug toggles (by uncommenting)
 
   ;; (setq debug-on-quit t)
@@ -52,7 +51,7 @@ Load pre-crafted Evil and Completion packages.
 
   #+end_src
 
-**  Custom Package Selections
+** Custom Package Selections
 
 The *crafted-org-packages* was not quite the thing I needed, so I
 tweaked it a bit and created a *custom-org-package*.
@@ -67,6 +66,62 @@ custom twin in the init file.
   (require 'custom-org-packages)
   #+end_src
 
+*** Custom Org Packages
+:PROPERTIES:
+:header-args: :tangle "custom-modules/custom-org-packages.el"
+:END:
+
+The header is taken as is from the original Crafted Org Packages.
+
+#+begin_src emacs-lisp
+  ;;; custom-org-packages.el --- Custom Org Packages  -*- lexical-binding: t; -*-
+
+  ;; Copyright (C) 2022
+  ;; SPDX-License-Identifier: MIT
+
+  ;; Author: System Crafters Community
+
+  ;;; Commentary:
+
+  ;; Packages to augment Org mode configuration
+
+  ;;; Code:
+#+end_src
+
+Pristine Crafted Emacs uses Denote by Prot. I am used to org-roam, so
+I choose it instead.
+
+#+begin_src emacs-lisp
+  ;; conventions and grep instead.
+  (add-to-list 'package-selected-packages 'org-roam)
+  (add-to-list 'package-selected-packages 'org-roam-ui)
+#+end_src
+
+Some nice enhancements for org.
+
+#+begin_src emacs-lisp
+  ;; some org enhancements
+  (add-to-list 'package-selected-packages 'org-modern)
+  (add-to-list 'package-selected-packages 'org-present)
+  (add-to-list 'package-selected-packages 'org-contrib)
+#+end_src
+
+And, of course, evil.
+
+#+begin_src emacs-lisp
+  ;; more evil
+  (add-to-list 'package-selected-packages 'evil-org)
+#+end_src
+
+The rest is from the original
+
+#+begin_src emacs-lisp
+  ;;; Toggle the visibility of some Org elements.
+  (add-to-list 'package-selected-packages 'org-appear)
+
+  (provide 'custom-org-packages)
+  ;;; crafted-org-packages.el ends here
+#+end_src
 ** Packages not Covered by Crafted Emacs
 
 The list of the following packages should be constantly scanned for
