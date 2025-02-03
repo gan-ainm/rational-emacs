@@ -20,6 +20,7 @@
 ;;; load prepacked crafted packages
 ;;;
 (require 'crafted-evil-packages)
+(require 'crafted-ide-packages)
 (require 'crafted-completion-packages)
 (require 'crafted-ui-packages)
 (require 'crafted-workspaces-packages)
@@ -64,11 +65,12 @@
 ;; dired-preview
 (add-to-list 'package-selected-packages 'dired-preview)
 ;; ansible
-
 (add-to-list 'package-selected-packages 'ansible)
 (add-to-list 'package-selected-packages 'ansible-doc)
 (add-to-list 'package-selected-packages 'ansible-vault)
+;; for reading ebooks
 (add-to-list 'package-selected-packages 'nov)
+;; looks nicer than raw
 (add-to-list 'package-selected-packages 'csv-mode)
 ;;;
 ;;; install all selected packages
@@ -91,14 +93,17 @@
 (require 'crafted-defaults-config)
 (require 'crafted-evil-config)
 (require 'crafted-completion-config)
-(require 'crafted-org-config)
-(require 'custom-org-config)
+(require 'crafted-ide-config)
 (require 'crafted-ui-config)
 (require 'crafted-workspaces-config)
 (require 'crafted-writing-config)
 (require 'crafted-updates-config)
 (require 'crafted-startup-config)
 
+;;;
+;;; custom configurations
+;;;
+(require 'custom-org-config)
 (require 'magit)
 
 ;;;
@@ -108,11 +113,13 @@
   :init
   (load-theme 'doom-one :no-confirm)
 ;; (load-theme 'doom-solarized-dark t)
+  (unless crafted-startup-inhibit-splash
+    (setq initial-buffer-choice #'crafted-startup-screen)))
+
 ;; (require 'modus-themes)
 ;; (load-theme 'modus-vivendi-tinted)
 ;;(load-theme 'ef-night)
-  (unless crafted-startup-inhibit-splash
-    (setq initial-buffer-choice #'crafted-startup-screen)))
+
 
 ;; activate which-key
 (use-package which-key
@@ -208,7 +215,6 @@
   :load-path "/usr/share/emacs/site-lisp/mu4e/"
   ;; :defer 20 ; Wait until 20 seconds after startup
   :config
-
   ;; This is set to 't' to avoid mail syncing issues when using mbsync
   (setq mu4e-change-filenames-when-moving t)
 
@@ -306,12 +312,14 @@
                 "rar\\|"
                 "zip\\|"
                 "iso\\|"
+                "pdf\\|"
                 "epub"
                 "\\)"))
 
   ;; Enable `dired-preview-mode' in a given Dired buffer or do it
   ;; globally:
-  (dired-preview-global-mode 1))
+  ;; (dired-preview-global-mode 1)
+)
 ;;;
 ;;; Magit
 ;;;

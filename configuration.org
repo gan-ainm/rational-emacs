@@ -35,7 +35,8 @@ If something goes wrong, quickly uncomment the prepared debug settings.
   (load "~/.local/share/crafted-emacs/modules/crafted-init-config")
 #+end_src
 
-** Crafted Packages
+** Package Selection
+*** Crafted Packages
 
 Load pre-crafted Evil and Completion packages.
 
@@ -43,15 +44,80 @@ Load pre-crafted Evil and Completion packages.
   ;;;
   ;;; load prepacked crafted packages
   ;;;
+#+end_src
+**** Evil
+
+The Crafted Evil collection comprises the packages
+- *evil*
+- *evil-collection*
+- *evil-nerd-commenter*
+  
+#+begin_src emacs-lisp
   (require 'crafted-evil-packages)
+#+end_src
+  
+**** IDE
+
+The Crafted IDE collection comprises the packages
+- [[info:editorconfig#Top][editorconfig]] :: cross-editor/ide configuration tool for indentation,
+  spaces vs. tabs, etc.
+- [[git:~/.local/share/crafted-emacs/elpa/aggressive-indent-1.10.0/README.md::literal-config@{2025-02-03}::1][aggressive-indent]] :: always keep code indented
+- *ibuffer-project* :: group project buffers when listing
+  
+#+begin_src emacs-lisp
+  (require 'crafted-ide-packages)
+#+end_src
+
+**** Completion  
+
+The Crafted Completion collection comprises the packages
+
+- [[info:cape#Top][cape]]:: *C*​ompletion *A*​t *P*​oint *E*​xtensions
+- [[info:consult#Top][consult]]  :: Consulting completing-read
+- [[info:corfu#Top][corfu]] :: *CO*​mpletion in *R*​egion *FU*​nction
+- [[git:~/.local/share/crafted-emacs/elpa/corfu-terminal-0.7/README.org::literal-config@{2025-02-03}::1][corfu-terminal]]:: Corfu popup on terminal
+- [[info:embark#Top][embark]] :: Conveniently act on minibuffer completions
+- [[git:~/.local/share/crafted-emacs/elpa/embark-consult-0.7/README.org::literal-config@{2025-02-03}::34][embark-consult]] :: Consult integration for Embark
+- [[info:marginalia#Top][marginalia]] :: Enrich existing commands with completion annotations
+- [[info:orderless#Top][orderless]] :: Completion style for matching regexps in any order
+- [[info:vertico#Top][vertico]] :: VERTical Interactive COmpletion
+
+#+begin_src emacs-lisp
   (require 'crafted-completion-packages)
+#+end_src
+  
+**** UI  
+
+- all-the-icons :: A library for inserting Developer icons
+- elisp-demos :: Elisp API Demos
+- helpful :: A better *help* buffer
+- breadcrumb :: project and imenu-based breadcrumb paths
+
+#+begin_src emacs-lisp
   (require 'crafted-ui-packages)
+#+end_src
+  
+**** Workspaces  
+
+At the moment, the only selected package is tabspaces to leverage
+tab-bar and project for buffer-isolated workspaces
+#+begin_src emacs-lisp
   (require 'crafted-workspaces-packages)
+ 
+#+end_src
+  
+**** Writing
+
+- [[git:~/.local/share/crafted-emacs/elpa/markdown-mode-2.6/README.md::literal-config@{2025-02-04}::11][markdown-mode]] :: Major mode for Markdown-formatted text
+- [[info:pandoc-mode#Top][pandoc-mode]] :: Minor mode for interacting with Pandoc
+- [[info:auctex#Top][auctex]] :: Integrated environment for *TeX*
+
+#+begin_src emacs-lisp
   (require 'crafted-writing-packages)
 
-  #+end_src
+#+end_src
 
-** Custom Package Selections
+*** Custom Package Selection
 
 The *crafted-org-packages* was not quite the thing I needed, so I
 tweaked it a bit and created a *custom-org-package*.
@@ -63,10 +129,10 @@ files directory and replacing the inclusion of the crafted file by its
 custom twin in the init file.
 
   #+begin_src emacs-lisp
-  (require 'custom-org-packages)
+    (require 'custom-org-packages)
   #+end_src
 
-*** Custom Org Packages
+**** Custom Org Packages
 :PROPERTIES:
 :header-args: :tangle "custom-modules/custom-org-packages.el"
 :END:
@@ -88,11 +154,10 @@ The header is taken as is from the original Crafted Org Packages.
   ;;; Code:
 #+end_src
 
-Pristine Crafted Emacs uses Denote by Prot. I am used to org-roam, so
-I choose it instead.
+Pristine Crafted Emacs uses Denote by Prot.  However, I am used to
+org-roam, so I choose it instead.
 
 #+begin_src emacs-lisp
-  ;; conventions and grep instead.
   (add-to-list 'package-selected-packages 'org-roam)
   (add-to-list 'package-selected-packages 'org-roam-ui)
 #+end_src
@@ -147,7 +212,7 @@ selection file.
   (add-to-list 'package-selected-packages 'ef-themes)
 #+end_src
     
-*** TODO Structure
+*** Other
 
 #+begin_src emacs-lisp
   ;; dynamic completion aid for keychords
@@ -176,291 +241,303 @@ selection file.
   ;; dired-preview
   (add-to-list 'package-selected-packages 'dired-preview)
   ;; ansible
-
   (add-to-list 'package-selected-packages 'ansible)
   (add-to-list 'package-selected-packages 'ansible-doc)
   (add-to-list 'package-selected-packages 'ansible-vault)
+  ;; for reading ebooks
   (add-to-list 'package-selected-packages 'nov)
+  ;; looks nicer than raw
   (add-to-list 'package-selected-packages 'csv-mode)
   ;;;
   ;;; install all selected packages
   ;;;
   (package-install-selected-packages :noconfirm)
+#+end_src
 
-  ;;;
-  ;;; version control
-  ;;;
-  (require 'package-vc)
+*** Package Configuration
 
-  (add-to-list 'package-vc-selected-packages
-    '(org-timeblock :url "https://github.com/ichernyshovvv/org-timeblock/"))
+#+begin_src emacs-lisp
+    ;;;
+    ;;; version control
+    ;;;
+    (require 'package-vc)
 
-  (package-vc-install-selected-packages)
+    (add-to-list 'package-vc-selected-packages
+      '(org-timeblock :url "https://github.com/ichernyshovvv/org-timeblock/"))
 
-  ;;;
-  ;;; get all prepacked configurations
-  ;;;
-  (require 'crafted-defaults-config)
-  (require 'crafted-evil-config)
-  (require 'crafted-completion-config)
-  (require 'crafted-org-config)
-  (require 'custom-org-config)
-  (require 'crafted-ui-config)
-  (require 'crafted-workspaces-config)
-  (require 'crafted-writing-config)
-  (require 'crafted-updates-config)
-  (require 'crafted-startup-config)
+    (package-vc-install-selected-packages)
 
-  (require 'magit)
+    ;;;
+    ;;; get all prepacked configurations
+    ;;;
+    (require 'crafted-defaults-config)
+    (require 'crafted-evil-config)
+    (require 'crafted-completion-config)
+    (require 'crafted-ide-config)
+    (require 'crafted-ui-config)
+    (require 'crafted-workspaces-config)
+    (require 'crafted-writing-config)
+    (require 'crafted-updates-config)
+    (require 'crafted-startup-config)
 
-  ;;;
-  ;;; theming
-  ;;;
-  (use-package doom-themes
-    :init
-    (load-theme 'doom-one :no-confirm)
-  ;; (load-theme 'doom-solarized-dark t)
-  ;; (require 'modus-themes)
-  ;; (load-theme 'modus-vivendi-tinted)
-  ;;(load-theme 'ef-night)
-    (unless crafted-startup-inhibit-splash
-      (setq initial-buffer-choice #'crafted-startup-screen)))
+    ;;;
+    ;;; custom configurations
+    ;;;
+    (require 'custom-org-config)
+    (require 'magit)
 
-  ;; activate which-key
-  (use-package which-key
-    :init
-    (which-key-mode 1))
+    ;;;
+    ;;; theming
+    ;;;
+    (use-package doom-themes
+      :init
+      (load-theme 'doom-one :no-confirm)
+    ;; (load-theme 'doom-solarized-dark t)
+      (unless crafted-startup-inhibit-splash
+        (setq initial-buffer-choice #'crafted-startup-screen)))
 
-  (require 'ement)
-  (require 'vterm)
+    ;; (require 'modus-themes)
+    ;; (load-theme 'modus-vivendi-tinted)
+    ;;(load-theme 'ef-night)
 
-  (keymap-set evil-normal-state-map "C-," 'embark-act)
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  ;;;
-  ;;; treesitter
-  ;;;
-  (setq treesit-language-source-alist
-        '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-          (python "https://github.com/tree-sitter/tree-sitter-python")
-          (c "https://github.com/tree-sitter/tree-sitter-c")
-          (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-          (rust "https://github.com/tree-sitter/tree-sitter-rust")))
-  ;;;
-  ;;; lsp-mode
-  ;;;
-  ;; change keybinding (s-l is used for i3wm to switch to window right)
-  (with-eval-after-load 'lsp-mode
-    (keymap-set lsp-mode-map "s-m" lsp-command-map))
 
-  (with-eval-after-load "prog-mode"
-    (keymap-set prog-mode-map "C-c e n" #'flymake-goto-next-error)
-    (keymap-set prog-mode-map "C-c e p" #'flymake-goto-prev-error))
+    ;; activate which-key
+    (use-package which-key
+      :init
+      (which-key-mode 1))
 
-  (add-hook 'prog-mode-hook #'menu-bar--display-line-numbers-mode-relative)
-  ;;;
-  ;;; Python
-  ;;;
-  (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
-  (add-hook 'python-ts-mode-hook #'eglot-ensure)
+    (require 'ement)
+    (require 'vterm)
 
-  ;;;
-  ;;; Rust
-  ;;;
-  (setq rustic-lsp-client 'eglot)
-  (add-to-list 'major-mode-remap-alist '(rust-mode . rust-ts-mode))
-  (add-hook 'rust-ts-mode-hook #'eglot-ensure)
-  (add-hook 'eglot-managed-mode-hook (lambda() (flymake-mode -1)))
-  ;;;
-  ;;; activities
-  ;;;
-  (use-package activities
-    :init
-    (activities-mode 1)
-    (activities-tabs-mode 1)
-    ;; Prevent `edebug' default bindings from interfering.
-    (setq edebug-inhibit-emacs-lisp-mode-bindings t)
-    :bind
-    (("C-x C-a C-n" . activities-new)
-     ("C-x C-a C-d" . activities-define)
-     ("C-x C-a C-a" . activities-resume)
-     ("C-x C-a C-s" . activities-suspend)
-     ("C-x C-a C-k" . activities-kill)
-     ("C-x C-a RET" . activities-switch)
-     ("C-x C-a b"   . activities-switch-buffer)
-     ("C-x C-a g"   . activities-revert)
-     ("C-x C-a l"   . activities-list)))
+    (keymap-set evil-normal-state-map "C-," 'embark-act)
+    (menu-bar-mode -1)
+    (tool-bar-mode -1)
+    ;;;
+    ;;; treesitter
+    ;;;
+    (setq treesit-language-source-alist
+          '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+            (python "https://github.com/tree-sitter/tree-sitter-python")
+            (c "https://github.com/tree-sitter/tree-sitter-c")
+            (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+            (rust "https://github.com/tree-sitter/tree-sitter-rust")))
+    ;;;
+    ;;; lsp-mode
+    ;;;
+    ;; change keybinding (s-l is used for i3wm to switch to window right)
+    (with-eval-after-load 'lsp-mode
+      (keymap-set lsp-mode-map "s-m" lsp-command-map))
 
-  ;;;
-  ;;; epa
-  ;;;
-  (defun jmf/lookup-password (&rest keys)
-    (let ((result (apply #'auth-source-search keys)))
-      (if result
-          (funcall (plist-get (car result) :secret))
-        nil)))
+    (with-eval-after-load "prog-mode"
+      (keymap-set prog-mode-map "C-c e n" #'flymake-goto-next-error)
+      (keymap-set prog-mode-map "C-c e p" #'flymake-goto-prev-error))
 
-  ;;;
-  ;;; mu4e & e-mail
-  ;;;
-  (setq send-mail-function 'smtpmail-send-it
-        user-full-name                "Gan Ainm"
-        user-mail-address             "gan.ainm.riomhphost@gmail.com"
-        message-send-mail-function    'smtpmail-send-it
-        smtpmail-starttls-credentials '(("smtp.gmail.com" "587" nil nil))
-        smtpmail-auth-credentials     (expand-file-name "~/.authinfo.gpg")
-        smtpmail-default-smtp-server  "smtp.gmx.com"
-        starttls-extra-arguments      nil
-        starttls-gnutls-program       "/usr/bin/gnutls-cli"
-        starttls-extra-arguments      nil
-        starttls-use-gnutls           t)
+    (add-hook 'prog-mode-hook #'menu-bar--display-line-numbers-mode-relative)
+    ;;;
+    ;;; Python
+    ;;;
+    (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
+    (add-hook 'python-ts-mode-hook #'eglot-ensure)
 
-  (use-package mu4e
-    ;; :ensure nil
-    :load-path "/usr/share/emacs/site-lisp/mu4e/"
-    ;; :defer 20 ; Wait until 20 seconds after startup
-    :config
+    ;;;
+    ;;; Rust
+    ;;;
+    (setq rustic-lsp-client 'eglot)
+    (add-to-list 'major-mode-remap-alist '(rust-mode . rust-ts-mode))
+    (add-hook 'rust-ts-mode-hook #'eglot-ensure)
+    (add-hook 'eglot-managed-mode-hook (lambda() (flymake-mode -1)))
+    ;;;
+    ;;; activities
+    ;;;
+    (use-package activities
+      :init
+      (activities-mode 1)
+      (activities-tabs-mode 1)
+      ;; Prevent `edebug' default bindings from interfering.
+      (setq edebug-inhibit-emacs-lisp-mode-bindings t)
+      :bind
+      (("C-x C-a C-n" . activities-new)
+       ("C-x C-a C-d" . activities-define)
+       ("C-x C-a C-a" . activities-resume)
+       ("C-x C-a C-s" . activities-suspend)
+       ("C-x C-a C-k" . activities-kill)
+       ("C-x C-a RET" . activities-switch)
+       ("C-x C-a b"   . activities-switch-buffer)
+       ("C-x C-a g"   . activities-revert)
+       ("C-x C-a l"   . activities-list)))
 
-    ;; This is set to 't' to avoid mail syncing issues when using mbsync
-    (setq mu4e-change-filenames-when-moving t)
+    ;;;
+    ;;; epa
+    ;;;
+    (defun jmf/lookup-password (&rest keys)
+      (let ((result (apply #'auth-source-search keys)))
+        (if result
+            (funcall (plist-get (car result) :secret))
+          nil)))
 
-    ;; Refresh mail using isync every 10 minutes
-    (setq mu4e-update-interval (* 10 60))
-    (setq mu4e-get-mail-command "/usr/bin/mbsync -a -c ~/.config/mbsync/config")
-    (setq mu4e-maildir "~/.local/share/Mail")
-    (setq mu4e-sent-folder "/GMX/Sent")
-    (setq mu4e-drafts-folder  "/GMX/Drafts")
-    (setq mu4e-refile-folder  "/GMX/Archives")
-    (setq mu4e-trash-folder  "/GMX/Trash")
-    (setq mu4e-user-mailing-lists
-          '((:list-id "dev.suckless.org"                               :name "suckless-dev")
-            (:list-id "wiki.suckless.org"                              :name "suckless-wiki")
-            (:list-id "1UOWK3I-11SY9YM.newsletterversand.zeit.de"      :name "ZEIT")
-            (:list-id "git-for-windows.googlegroups.com"               :name "git-windows")
-            (:list-id "newsletter.news.outdooractive.com.0sgsk-2s4.mj" :name "Outdooractive")
-            (:list-id "news.lists.systemcrafters.net"                  :name "SystemCrafters")
-            (:list-id "learningtoplayvim.buttondown.email"             :name "LearnPlayVim")
-            (:list-id "SystemCrafters/crafted-emacs"                   :name "crafted-emacs")))
-    (setq mu4e-headers-fields
-          '((:human-date . 12)
-            (:flags . 6)
-            (:from-or-to . 25)
-            (:mailing-list . 20)
-            (:subject)))
-    (add-hook 'mu4e-compose-pre-hook
-              (defun jmf/thunderbird-reply()
-                "Set quoting style to Thunderbird-like"
-                (setq message-cite-style message-cite-style-thunderbird)))
+    ;;;
+    ;;; mu4e & e-mail
+    ;;;
+    (setq send-mail-function 'smtpmail-send-it
+          user-full-name                "Gan Ainm"
+          user-mail-address             "gan.ainm.riomhphost@gmail.com"
+          message-send-mail-function    'smtpmail-send-it
+          smtpmail-starttls-credentials '(("smtp.gmail.com" "587" nil nil))
+          smtpmail-auth-credentials     (expand-file-name "~/.authinfo.gpg")
+          smtpmail-default-smtp-server  "smtp.gmx.com"
+          starttls-extra-arguments      nil
+          starttls-gnutls-program       "/usr/bin/gnutls-cli"
+          starttls-extra-arguments      nil
+          starttls-use-gnutls           t)
 
-    (setq mu4e-contexts
-          (list
-           (make-mu4e-context
-            :name "Personal"
-            :match-func
-            (lambda (msg)
-              (when msg
-                (string-prefix-p "/GMX" (mu4e-message-field msg :maildir))))
-            :vars '((user-mail-address . "jens@netfelderhoff.com")
-                    (user-full-name . "Jens Felderhoff")
-                    (smtpmail-smtp-server . "smtp.gmx.net")
-                    (smtpmail-smtp-service . 587)
-                    (smtpmail-debug-info . t)
-                    (mu4e-drafts-folder . "/GMX/Drafts")
-                    (mu4e-sent-folder . "/GMX/Sent")
-                    (mu4e-refile-folder . "/GMX/Archives")
-                    (mu4e-trash-folder . "/GMX/Trash")
-                    (mu4e-maildir-shortcuts . ((:maildir "/GMX/Inbox"     :key ?i)
-                                               (:maildir "/GMX/Sent"      :key ?s)
-                                               (:maildir "/GMX/Trash"     :key ?t)
-                                               (:maildir "/GMX/Drafts"    :key ?d)
-                                               (:maildir "/GMX/Archives"  :key ?a)))))
-           (make-mu4e-context
-            :name "Gan"
-            :match-func
-            (lambda (msg)
-              (when msg
-                (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
-            :vars '((user-mail-address . "gan.ainm.riomhphost@gmail.com")
-                    (user-full-name . "Gan Ainm")
-                    (smtpmail-smtp-server . "smtp.gmail.com")
-                    (smtpmail-smtp-service . 587)
-                    (smtpmail-debug-info . t)
-                    (mu4e-drafts-folder . "/Gmail/[Google Mail]/Drafts")
-                    (mu4e-sent-folder . "/Gmail/[Google Mail]/Sent Mail")
-                    (mu4e-refile-folder . "/Gmail/[Google Mail]/All Mail")
-                    (mu4e-trash-folder . "/Gmail/[Google Mail]/Trash")
-                    (mu4e-maildir-shortcuts . ((:maildir "/Gmail/Inbox"   :key ?i)
-                                               (:maildir "/Gmail/[Google Mail]/Sent"      :key ?s)
-                                               (:maildir "/Gmail/[Google Mail]/Trash"     :key ?t)
-                                               (:maildir "/Gmail/[Google Mail]/Drafts"    :key ?d)))))))
+    (use-package mu4e
+      ;; :ensure nil
+      :load-path "/usr/share/emacs/site-lisp/mu4e/"
+      ;; :defer 20 ; Wait until 20 seconds after startup
+      :config
+      ;; This is set to 't' to avoid mail syncing issues when using mbsync
+      (setq mu4e-change-filenames-when-moving t)
 
-    (setq mu4e-maildir-shortcuts
-          '((:maildir "/GMX/Inbox"     :key ?i)
-            (:maildir "/GMX/Sent"      :key ?s)
-            (:maildir "/GMX/Trash"     :key ?t)
-            (:maildir "/GMX/Drafts"    :key ?d)
-            (:maildir "/GMX/Archives"  :key ?a))))
-  ;;;
-  ;;; dired-preview
-  ;;;
-  (use-package dired-preview
+      ;; Refresh mail using isync every 10 minutes
+      (setq mu4e-update-interval (* 10 60))
+      (setq mu4e-get-mail-command "/usr/bin/mbsync -a -c ~/.config/mbsync/config")
+      (setq mu4e-maildir "~/.local/share/Mail")
+      (setq mu4e-sent-folder "/GMX/Sent")
+      (setq mu4e-drafts-folder  "/GMX/Drafts")
+      (setq mu4e-refile-folder  "/GMX/Archives")
+      (setq mu4e-trash-folder  "/GMX/Trash")
+      (setq mu4e-user-mailing-lists
+            '((:list-id "dev.suckless.org"                               :name "suckless-dev")
+              (:list-id "wiki.suckless.org"                              :name "suckless-wiki")
+              (:list-id "1UOWK3I-11SY9YM.newsletterversand.zeit.de"      :name "ZEIT")
+              (:list-id "git-for-windows.googlegroups.com"               :name "git-windows")
+              (:list-id "newsletter.news.outdooractive.com.0sgsk-2s4.mj" :name "Outdooractive")
+              (:list-id "news.lists.systemcrafters.net"                  :name "SystemCrafters")
+              (:list-id "learningtoplayvim.buttondown.email"             :name "LearnPlayVim")
+              (:list-id "SystemCrafters/crafted-emacs"                   :name "crafted-emacs")))
+      (setq mu4e-headers-fields
+            '((:human-date . 12)
+              (:flags . 6)
+              (:from-or-to . 25)
+              (:mailing-list . 20)
+              (:subject)))
+      (add-hook 'mu4e-compose-pre-hook
+                (defun jmf/thunderbird-reply()
+                  "Set quoting style to Thunderbird-like"
+                  (setq message-cite-style message-cite-style-thunderbird)))
 
-    :config
-    ;; Default values for demo purposes
-    (setq dired-preview-delay 0.7
-          dired-preview-max-size (expt 2 20)
-          dired-preview-ignored-extensions-regexp
-          (concat "\\."
-                  "\\(gz\\|"
-                  "zst\\|"
-                  "tar\\|"
-                  "xz\\|"
-                  "rar\\|"
-                  "zip\\|"
-                  "iso\\|"
-                  "epub"
-                  "\\)"))
+      (setq mu4e-contexts
+            (list
+             (make-mu4e-context
+              :name "Personal"
+              :match-func
+              (lambda (msg)
+                (when msg
+                  (string-prefix-p "/GMX" (mu4e-message-field msg :maildir))))
+              :vars '((user-mail-address . "jens@netfelderhoff.com")
+                      (user-full-name . "Jens Felderhoff")
+                      (smtpmail-smtp-server . "smtp.gmx.net")
+                      (smtpmail-smtp-service . 587)
+                      (smtpmail-debug-info . t)
+                      (mu4e-drafts-folder . "/GMX/Drafts")
+                      (mu4e-sent-folder . "/GMX/Sent")
+                      (mu4e-refile-folder . "/GMX/Archives")
+                      (mu4e-trash-folder . "/GMX/Trash")
+                      (mu4e-maildir-shortcuts . ((:maildir "/GMX/Inbox"     :key ?i)
+                                                 (:maildir "/GMX/Sent"      :key ?s)
+                                                 (:maildir "/GMX/Trash"     :key ?t)
+                                                 (:maildir "/GMX/Drafts"    :key ?d)
+                                                 (:maildir "/GMX/Archives"  :key ?a)))))
+             (make-mu4e-context
+              :name "Gan"
+              :match-func
+              (lambda (msg)
+                (when msg
+                  (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
+              :vars '((user-mail-address . "gan.ainm.riomhphost@gmail.com")
+                      (user-full-name . "Gan Ainm")
+                      (smtpmail-smtp-server . "smtp.gmail.com")
+                      (smtpmail-smtp-service . 587)
+                      (smtpmail-debug-info . t)
+                      (mu4e-drafts-folder . "/Gmail/[Google Mail]/Drafts")
+                      (mu4e-sent-folder . "/Gmail/[Google Mail]/Sent Mail")
+                      (mu4e-refile-folder . "/Gmail/[Google Mail]/All Mail")
+                      (mu4e-trash-folder . "/Gmail/[Google Mail]/Trash")
+                      (mu4e-maildir-shortcuts . ((:maildir "/Gmail/Inbox"   :key ?i)
+                                                 (:maildir "/Gmail/[Google Mail]/Sent"      :key ?s)
+                                                 (:maildir "/Gmail/[Google Mail]/Trash"     :key ?t)
+                                                 (:maildir "/Gmail/[Google Mail]/Drafts"    :key ?d)))))))
 
-    ;; Enable `dired-preview-mode' in a given Dired buffer or do it
-    ;; globally:
-    (dired-preview-global-mode 1))
-  ;;;
-  ;;; Magit
-  ;;;
+      (setq mu4e-maildir-shortcuts
+            '((:maildir "/GMX/Inbox"     :key ?i)
+              (:maildir "/GMX/Sent"      :key ?s)
+              (:maildir "/GMX/Trash"     :key ?t)
+              (:maildir "/GMX/Drafts"    :key ?d)
+              (:maildir "/GMX/Archives"  :key ?a))))
+    ;;;
+    ;;; dired-preview
+    ;;;
+    (use-package dired-preview
 
-  ;; handling dotfiles repo
-  (setq jmf/dotfile-dirs-list
-        (mapcar
-         (lambda (d)
-                  (file-name-as-directory (expand-file-name d "~/.config")))
-                '("~/"
-                  "Emacs_from_Scratch"
-                  "X11"
-                  "chemacs"
-                  "doom"
-                  "i3"
-                  "i3status"
-                  "pulse"
-                  "vim"
-                  "yapf"
-                  "zsh"
-                  "~/.local/share/oh-my-zsh/custom"
-                  "~/bin")))
+      :config
+      ;; Default values for demo purposes
+      (setq dired-preview-delay 0.7
+            dired-preview-max-size (expt 2 20)
+            dired-preview-ignored-extensions-regexp
+            (concat "\\."
+                    "\\(gz\\|"
+                    "zst\\|"
+                    "tar\\|"
+                    "xz\\|"
+                    "rar\\|"
+                    "zip\\|"
+                    "iso\\|"
+                    "pdf\\|"
+                    "epub"
+                    "\\)"))
 
-  (defun jmf/magit-process-environment (env)
-    "Add GIT_DIR and GIT_WORK_TREE to ENV when in a special directory.
-  https://github.com/magit/magit/issues/460 (@cpitclaudel)."
-    (let ((default (file-name-as-directory (expand-file-name default-directory))))
-      (when (member default jmf/dotfile-dirs-list)
-        (let ((gitdir (expand-file-name "~/.local/share/dotfiles/"))
-              (home (expand-file-name "~/")))
-          (push (format "GIT_WORK_TREE=%s" home) env)
-          (push (format "GIT_DIR=%s" gitdir) env))))
-    env)
+      ;; Enable `dired-preview-mode' in a given Dired buffer or do it
+      ;; globally:
+      ;; (dired-preview-global-mode 1)
+    )
+    ;;;
+    ;;; Magit
+    ;;;
 
-  (advice-add 'magit-process-environment
-              :filter-return #'jmf/magit-process-environment)
+    ;; handling dotfiles repo
+    (setq jmf/dotfile-dirs-list
+          (mapcar
+           (lambda (d)
+                    (file-name-as-directory (expand-file-name d "~/.config")))
+                  '("~/"
+                    "Emacs_from_Scratch"
+                    "X11"
+                    "chemacs"
+                    "doom"
+                    "i3"
+                    "i3status"
+                    "pulse"
+                    "vim"
+                    "yapf"
+                    "zsh"
+                    "~/.local/share/oh-my-zsh/custom"
+                    "~/bin")))
 
-  (use-package csv-mode)
+    (defun jmf/magit-process-environment (env)
+      "Add GIT_DIR and GIT_WORK_TREE to ENV when in a special directory.
+    https://github.com/magit/magit/issues/460 (@cpitclaudel)."
+      (let ((default (file-name-as-directory (expand-file-name default-directory))))
+        (when (member default jmf/dotfile-dirs-list)
+          (let ((gitdir (expand-file-name "~/.local/share/dotfiles/"))
+                (home (expand-file-name "~/")))
+            (push (format "GIT_WORK_TREE=%s" home) env)
+            (push (format "GIT_DIR=%s" gitdir) env))))
+      env)
+
+    (advice-add 'magit-process-environment
+                :filter-return #'jmf/magit-process-environment)
+
+    (use-package csv-mode)
 
 #+end_src
+
