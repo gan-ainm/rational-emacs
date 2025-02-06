@@ -48,7 +48,7 @@
  '(ibuffer-movement-cycle nil)
  '(ibuffer-old-time 24)
  '(kill-do-not-save-duplicates t)
- '(load-prefer-newer t t)
+ '(load-prefer-newer t)
  '(magit-save-repository-buffers 'dontask)
  '(major-mode-remap-alist
    '((python-mode . python-ts-mode)

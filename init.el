@@ -19,14 +19,21 @@
 ;;;
 ;;; load prepacked crafted packages
 ;;;
+
 (require 'crafted-evil-packages)
+
 (require 'crafted-ide-packages)
+
 (require 'crafted-completion-packages)
+
 (require 'crafted-ui-packages)
+
 (require 'crafted-workspaces-packages)
+
 (require 'crafted-writing-packages)
 
 (require 'custom-org-packages)
+(require 'custom-ide-packages)
 
 ;;;
 ;;; this is the personal choice of package selections
@@ -45,13 +52,6 @@
 (add-to-list 'package-selected-packages 'ement)
 ;; the virtual terminal
 (add-to-list 'package-selected-packages 'vterm)
-;; environment for Guile programming
-(add-to-list 'package-selected-packages 'geiser)
-(add-to-list 'package-selected-packages 'geiser-guile)
-;; support for the Language Server Protocol
-(add-to-list 'package-selected-packages 'lsp-mode)
-;; environment for Rust programming
-(add-to-list 'package-selected-packages 'rustic)
 ;; the butler for buffers
 (add-to-list 'package-selected-packages 'bufler)
 ;; using PDFs with emacs
@@ -62,12 +62,9 @@
 (add-to-list 'package-selected-packages 'ob-restclient)
 ;; activities
 (add-to-list 'package-selected-packages 'activities)
-;; dired-preview
+;; dired additions
 (add-to-list 'package-selected-packages 'dired-preview)
-;; ansible
-(add-to-list 'package-selected-packages 'ansible)
-(add-to-list 'package-selected-packages 'ansible-doc)
-(add-to-list 'package-selected-packages 'ansible-vault)
+(add-to-list 'package-selected-packages 'all-the-icons-dired)
 ;; for reading ebooks
 (add-to-list 'package-selected-packages 'nov)
 ;; looks nicer than raw
@@ -358,3 +355,6 @@ https://github.com/magit/magit/issues/460 (@cpitclaudel)."
             :filter-return #'jmf/magit-process-environment)
 
 (use-package csv-mode)
+
+(use-package all-the-icons-dired
+  :hook dired-mode)
