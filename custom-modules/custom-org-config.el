@@ -172,9 +172,9 @@
 
   :bind (("C-c a" . org-agenda)
          ("C-c x" . org-capture)
+         ("C-c l" . org-store-link)
          :map org-mode-map
          ("C-c L" . org-toggle-link-display)
-         ("C-c l" . org-store-link)
          ("C-M-i" . completion-at-point)))
 
 ;;;
