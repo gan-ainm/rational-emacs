@@ -33,6 +33,13 @@ If something goes wrong, quickly uncomment the prepared debug settings.
   ;;; load the standard crafted initialization
   ;;;
   (load "~/.local/share/crafted-emacs/modules/crafted-init-config")
+  ;;;
+  ;;; Some preferred faces
+  ;;;
+  (defvar jmf/fixed-width-font "JetBrains Mono"
+    "The font used for monospaced text.")
+  (defvar jmf/variable-width-font "Iosevka Aile Thin"
+    "The font used for document text.")
 #+end_src
 
 ** Package Selection
