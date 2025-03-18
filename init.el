@@ -69,6 +69,9 @@
 (add-to-list 'package-selected-packages 'nov)
 ;; looks nicer than raw
 (add-to-list 'package-selected-packages 'csv-mode)
+;; EMMS
+(add-to-list 'package-selected-packages 'emms)
+(add-to-list 'package-selected-packages 'emms-player-simple-mpv)
 ;;;
 ;;; install all selected packages
 ;;;
@@ -80,7 +83,7 @@
 (require 'package-vc)
 
 (add-to-list 'package-vc-selected-packages
-  '(org-timeblock :url "https://github.com/ichernyshovvv/org-timeblock/"))
+             '(org-timeblock :url "https://github.com/ichernyshovvv/org-timeblock/"))
 
 (package-vc-install-selected-packages)
 

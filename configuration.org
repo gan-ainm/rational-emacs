@@ -270,6 +270,9 @@ selection file.
   (add-to-list 'package-selected-packages 'nov)
   ;; looks nicer than raw
   (add-to-list 'package-selected-packages 'csv-mode)
+  ;; EMMS
+  (add-to-list 'package-selected-packages 'emms)
+  (add-to-list 'package-selected-packages 'emms-player-simple-mpv)
   ;;;
   ;;; install all selected packages
   ;;;
@@ -541,4 +544,3 @@ selection file.
   (use-package all-the-icons-dired
     :hook dired-mode)
 #+end_src
-
