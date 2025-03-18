@@ -93,7 +93,6 @@
 (require 'crafted-defaults-config)
 (require 'crafted-evil-config)
 (require 'crafted-completion-config)
-(require 'crafted-ide-config)
 (require 'crafted-ui-config)
 (require 'crafted-workspaces-config)
 (require 'crafted-writing-config)
@@ -104,6 +103,7 @@
 ;;; custom configurations
 ;;;
 (require 'custom-org-config)
+(require 'custom-ide-config)
 (require 'magit)
 
 ;;;
