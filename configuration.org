@@ -431,9 +431,10 @@ The new implementation should use the recommended function
                     (org-level-7 . 1.0)
                     (org-level-8 . 1.0)))
       (face-remap-add-relative (car face)
-                               :font jmf/variable-width-font
+                               :font (font-spec :name jmf/variable-width-font)
                                :weight 'medium
-                               :height (cdr face)))
+                               :height (cdr face)
+                               :inherit (format "outline-%s" (substring (prin1-to-string (car face)) -1))))
 
     ;; Make the document title a bit bigger
     (face-remap-add-relative 'org-document-title
@@ -455,7 +456,7 @@ The new implementation should use the recommended function
     (face-remap-add-relative 'variable-pitch
                              :font jmf/variable-width-font
                              :weight 'light
-                             :height 1.0))
+                             :height 1.0)
     (face-remap-add-relative 'org-block
                              :inherit 'fixed-pitch
                              :foreground 'unspecified)
@@ -467,7 +468,8 @@ The new implementation should use the recommended function
                              'font-lock-comment-face
                              'fixed-pitch)
     (face-remap-add-relative 'org-meta-line 'font-lock-comment-face 'fixed-pitch)
-    (face-remap-add-relative 'org-checkbox 'fixed-pitch))
+    (face-remap-add-relative 'org-checkbox 'fixed-pitch)
+  )
 #+end_src
 
 #+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
