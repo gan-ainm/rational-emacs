@@ -978,20 +978,26 @@ Compare faces set with *jmf/org-set-faces* vs. *doom-themes-org-config*.
               :filter-return #'jmf/magit-process-environment)
 #+end_src
 
+**** Theming
+
+#+begin_src emacs-lisp
   ;;;
   ;;; theming
   ;;;
   (use-package doom-themes
     :config
-    (load-theme 'doom-one :no-confirm)
+    (load-theme 'doom-one t)
   ;; (load-theme 'doom-solarized-dark t)
-    (unless crafted-startup-inhibit-splash
-      (setq initial-buffer-choice #'crafted-startup-screen)))
+    (setq doom-themes-enable-bold t
+          doom-themes-enable-italic t)
+    (doom-themes-neotree-config)
+    (setq doom-themes-treemacs-theme "doom-atom")
+    (doom-themes-treemacs-config)
+    (doom-themes-org-config))
 
   ;; (require 'modus-themes)
-  ;; (load-theme 'modus-vivendi-tinted)
-  ;;(load-theme 'ef-night)
-
+  ;; (load-theme 'modus-vivendi-tinted t)
+  ;; (load-theme 'ef-night t)
 
   ;; activate which-key
   (use-package which-key
