@@ -1054,6 +1054,11 @@ And the ~gnus-init-file~ looks like this:
                                                     (nnimap-user "gan.ainm.riomhphost@gmail.com")
                                                     (nnimap-stream ssl))))
 #+end_src
+
+***** E-Mail
+The current configuration is using *mbsync* and *mu4e*.
+
+#+begin_src emacs-lisp
   ;;;
   ;;; mu4e & e-mail
   ;;;
@@ -1153,6 +1158,8 @@ And the ~gnus-init-file~ looks like this:
             (:maildir "/GMX/Trash"     :key ?t)
             (:maildir "/GMX/Drafts"    :key ?d)
             (:maildir "/GMX/Archives"  :key ?a))))
+#+end_src
+
   ;;;
   ;;; dired-preview
   ;;;
