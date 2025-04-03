@@ -999,17 +999,11 @@ Compare faces set with *jmf/org-set-faces* vs. *doom-themes-org-config*.
   ;; (load-theme 'modus-vivendi-tinted t)
   ;; (load-theme 'ef-night t)
 
-  ;; activate which-key
-  (use-package which-key
-    :init
-    (which-key-mode 1))
+#+end_src
 
-  (require 'ement)
-  (require 'vterm)
+**** Activities
 
-  (keymap-set evil-normal-state-map "C-," 'embark-act)
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
+#+begin_src emacs-lisp
   ;;;
   ;;; activities
   ;;;
@@ -1195,9 +1189,28 @@ The current configuration is using *mbsync* and *mu4e*.
 
 #+end_src
 
+**** Other
+
+#+begin_src emacs-lisp
+  ;; activate which-key
+  (use-package which-key
+    :init
+    (which-key-mode 1))
+
+  (require 'ement)
+  (require 'vterm)
+
+  (keymap-set evil-normal-state-map "C-," 'embark-act)
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  ;;;
+  ;;; epa
+  ;;;
+  (defun jmf/lookup-password (&rest keys)
+    (let ((result (apply #'auth-source-search keys)))
+      (if result
+          (funcall (plist-get (car result) :secret))
+        nil)))
 
   (use-package csv-mode)
-
-  (use-package all-the-icons-dired
-    :hook dired-mode)
 #+end_src
