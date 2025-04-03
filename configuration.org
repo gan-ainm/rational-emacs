@@ -1160,6 +1160,9 @@ The current configuration is using *mbsync* and *mu4e*.
             (:maildir "/GMX/Archives"  :key ?a))))
 #+end_src
 
+**** Dired
+
+#+begin_src emacs-lisp
   ;;;
   ;;; dired-preview
   ;;;
@@ -1187,7 +1190,10 @@ The current configuration is using *mbsync* and *mu4e*.
     ;; (dired-preview-global-mode 1)
   )
 
+  (use-package all-the-icons-dired
+    :hook dired-mode)
 
+#+end_src
 
 
   (use-package csv-mode)
