@@ -38,7 +38,7 @@ If something goes wrong, quickly uncomment the prepared debug settings.
   ;;;
   (defvar jmf/fixed-width-font "JetBrains Mono"
     "The font used for monospaced text.")
-  (defvar jmf/variable-width-font "Iosevka Aile Thin"
+  (defvar jmf/variable-width-font "Iosevka Aile"
     "The font used for document text.")
 #+end_src
 
