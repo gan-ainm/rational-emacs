@@ -929,13 +929,19 @@ Compare faces set with *jmf/org-set-faces* vs. *doom-themes-org-config*.
   (add-hook 'tmr-timer-created-functions #'prot-window-delete-popup-frame)
   (provide 'custom-org-config)
 #+end_src
-**** Other
+
+**** Custom IDE Configuration
+
+#+begin_src emacs-lisp
+  (require 'custom-ide-config)
+#+end_src
+
+**** Magit
 
 #+begin_src emacs-lisp
   ;;;
   ;;; custom configurations
   ;;;
-  (require 'custom-ide-config)
   (require 'magit)
 
   ;;;
