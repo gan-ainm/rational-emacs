@@ -1029,16 +1029,31 @@ Compare faces set with *jmf/org-set-faces* vs. *doom-themes-org-config*.
      ("C-x C-a b"   . activities-switch-buffer)
      ("C-x C-a g"   . activities-revert)
      ("C-x C-a l"   . activities-list)))
+#+end_src
 
-  ;;;
-  ;;; epa
-  ;;;
-  (defun jmf/lookup-password (&rest keys)
-    (let ((result (apply #'auth-source-search keys)))
-      (if result
-          (funcall (plist-get (car result) :secret))
-        nil)))
+**** News and E-Mail
 
+***** COMMENT News
+
+Does Gnus offer configuration using *use-package*?
+
+#+begin_src emacs-lisp :tangle no
+  ;;;
+  ;;; Gnus
+  ;;;
+  ;; TODO: set startup file pathname
+  (setq gnus-startup-file "~/.local/share/crafted-emacs/Gnus/newsrc")
+  (setq gnus-init-file "~/.local/share/crafted-emacs/Gnus/gnus")
+#+end_src
+
+And the ~gnus-init-file~ looks like this:
+
+#+begin_src emacs-lisp :tangle ~/.local/share/crafted-emacs/Gnus/gnus
+      (setq gnus-select-method '(nntp "news.giganews.com"))
+      (setq gnus-secondary-select-methods '((nnimap "imap.gmail.com"
+                                                    (nnimap-user "gan.ainm.riomhphost@gmail.com")
+                                                    (nnimap-stream ssl))))
+#+end_src
   ;;;
   ;;; mu4e & e-mail
   ;;;
