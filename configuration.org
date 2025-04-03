@@ -323,6 +323,10 @@ selection file.
 
 **** Custom Org Configuration
 
+#+begin_src emacs-lisp
+  (require 'custom-org-config)
+#+end_src
+
 #+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
   ;;; custom-org.el --- custom org-mode settings  -*- lexical-binding: t; -*-
 
@@ -438,6 +442,63 @@ The new implementation should use the recommended function
 
     ;; Make the document title a bit bigger
     (face-remap-add-relative 'org-document-title
+                             :font (font-spec :name jmf/variable-width-font)
+                             :weight 'bold
+                             :height 1.3)
+    ;;(set-face-attribute 'fixed-pitch nil :font (font-spec :name jmf/fixed-width-font :weight 'light :height 100))
+    ;;(set-face-attribute 'variable-pitch nil :font (font-spec :name jmf/variable-width-font :weight 'light :height 1.0))
+
+    ;; Make sure certain org faces use the fixed-pitch face when variable-pith-mode is on
+    (face-remap-add-relative 'default
+                             :font (font-spec :name jmf/fixed-width-font)
+                             :weight 'light
+                             :height 0.65)
+    (face-remap-add-relative 'fixed-pitch
+                             :font (font-spec :name jmf/fixed-width-font)
+                             :weight 'light
+                             :height 1.0)
+    (face-remap-add-relative 'variable-pitch
+                             :font (font-spec :name jmf/variable-width-font)
+                             :weight 'light
+                             :height 1.0)
+    (face-remap-add-relative 'org-block
+                             :inherit 'fixed-pitch
+                             :foreground 'unspecified)
+    (face-remap-add-relative 'org-table 'fixed-pitch)
+    (face-remap-add-relative 'org-formula 'fixed-pitch)
+    (face-remap-add-relative 'org-code 'shadow 'fixed-pitch)
+    (face-remap-add-relative 'org-verbatim 'shadow 'fixed-pitch)
+    (face-remap-add-relative 'org-special-keyword
+                             'font-lock-comment-face
+                             'fixed-pitch)
+    (face-remap-add-relative 'org-meta-line 'font-lock-comment-face 'fixed-pitch)
+    (face-remap-add-relative 'org-checkbox 'fixed-pitch)
+  )
+#+end_src
+
+The next approach tries to use *use-package*'s ~:custom-font~ keyword.
+
+#+begin_src emacs-lisp :tangle no
+  (defun jmf/org-set-faces ()
+    ;; set faces for orgmode
+
+    ;; Resize Org headings
+    (dolist (face '((org-level-1 . 1.2)
+                    (org-level-2 . 1.1)
+                    (org-level-3 . 1.05)
+                    (org-level-4 . 1.0)
+                    (org-level-5 . 1.0)
+                    (org-level-6 . 1.0)
+                    (org-level-7 . 1.0)
+                    (org-level-8 . 1.0)))
+      (face-remap-add-relative (car face)
+                               :font (font-spec :name jmf/variable-width-font)
+                               :weight 'medium
+                               :height (cdr face)
+                               :inherit (format "outline-%s" (substring (prin1-to-string (car face)) -1))))
+
+    ;; Make the document title a bit bigger
+    (face-remap-add-relative 'org-document-title
                              :font jmf/variable-width-font
                              :weight 'bold
                              :height 1.3)
@@ -469,16 +530,13 @@ The new implementation should use the recommended function
                              'fixed-pitch)
     (face-remap-add-relative 'org-meta-line 'font-lock-comment-face 'fixed-pitch)
     (face-remap-add-relative 'org-checkbox 'fixed-pitch)
-  )
-#+end_src
+    )
 
-#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
-  ;;;
-  ;;; org
-  ;;;
+                  ;;;
+                  ;;; org
+                  ;;;
   (use-package org
     :config
-
     ;; turn on variable pitch fonts in Org Mode buffers
     (add-hook 'org-mode-hook 'variable-pitch-mode)
     (add-hook 'org-mode-hook 'jmf/org-set-faces)
@@ -492,7 +550,113 @@ The new implementation should use the recommended function
     (customize-set-variable 'org-priority-faces (quote ((65 . "red"))))
     (customize-set-variable 'org-refile-allow-creating-parent-nodes 'confirm)
     (customize-set-variable 'org-refile-targets '((org-agenda-files
-                                                   :maxlevel . 6)))
+                                                   :maxlevel . 6)
+                                                  (nil :maxlevel . 3)))
+    (customize-set-variable 'org-refile-use-outline-path (quote file))
+    (customize-set-variable 'org-src-preserve-indentation nil)
+    (customize-set-variable 'org-ellipsis " ▼")
+    (customize-set-variable 'evil-auto-indent t)
+    (customize-set-variable 'org-tags-column -77)
+    (customize-set-variable 'org-agenda-custom-commands
+                            '(("p" "Planning"
+                               ((tags-todo "+@planning"
+                                           ((org-agenda-overriding-header
+                                             "Planning Tasks")))
+                                (tags-todo "-{.*}"
+                                           ((org-agenda-overriding-header
+                                             "Untagged Tasks")))
+                                (todo ".*"
+                                      ((org-agenda-files '("~/org/inbox.org"))
+                                       (org-agenda-overriding-header
+                                        "Unprocessed Inbox Items")))))
+                              ("d" "Daily Agenda"
+                               ((agenda "" ((org-agenda-span 'day)))))))
+    (customize-set-variable 'org-capture-templates
+                            '(("n" "Note" entry
+                               (file+headline "inbox.org" "NOTES")
+                               "* %^{Title}\n%?\n\n%a"
+                               :empty-lines 1)
+
+                              ("j" "Journal entry templates")
+                              ("jp" "Private journal" entry
+                               (file+olp+datetree "journal.org" "JOURNAL")
+                               "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
+                               :empty-lines 1)
+                              ("jw" "Work journal" entry
+                               (file+olp+datetree "work/journal.org")
+                               "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
+                               :empty-lines 1)
+
+                              ("t" "Todo" entry
+                               (file+headline "inbox.org" "TASKS")
+                               "* TODO %^{What?}\n%?\n\n%a"
+                               :empty-lines 1)
+
+                              ("c" "Daily todo checklist" checkitem
+                               (file+olp+datetree "daily.org")
+                               "[ ] %^{What?}\n%i\n\n%a"
+                               :empty-lines 1)
+
+                              ("b" "Book entry templates")
+                              ("bf" "Fiction" entry
+                               (file+olp "todo.org"
+                                         "Reading" "Books" "Fiction")
+                               "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
+                              ("bn" "Non-Fiction" entry
+                               (file+olp "todo.org" "Reading" "Books" "Non-Fiction")
+                               "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
+
+                              ("x" "Web capture" entry
+                               (file+headline "inbox.org" "WEB captures")
+                               "* %:annotation\n\n%i\n%?\n%U"
+                               :empty-lines 1)))
+    (setq visual-fill-column-width 110
+          visual-fill-column-center-text t)
+
+    :custom-face
+
+    (jmf/org-level-1  (t . (:inherit 'outline-1 :weight 'medium :height 1.2)))
+    (jmf/org-level-2  (t . (:inherit 'outline-2 :weight 'medium :height 1.1)))
+    (jmf/org-level-3  (t . (:inherit 'outline-3 :weight 'medium :height 1.05)
+    (jmf/org-level-4  (t . (:inherit 'outline-4 :weight 'medium :height 1.0)
+    (jmf/org-level-5  (t . (:inherit 'outline-5 :weight 'medium :height 1.0)
+    (jmf/org-level-6  (t . (:inherit 'outline-6 :weight 'medium :height 1.0)
+    (jmf/org-level-7  (t . (:inherit 'outline-7 :weight 'medium :height 1.0)
+    (jmf/org-level-8  (t . (:inherit 'outline-8 :weight 'medium :height 1.0)))
+
+    :bind (("C-c a" . org-agenda)
+           ("C-c x" . org-capture)
+           ("C-c l" . org-store-link)
+           :map org-mode-map
+           ("C-c L" . org-toggle-link-display)
+           ("C-M-i" . completion-at-point)))
+
+#+end_src
+
+Compare faces set with *jmf/org-set-faces* vs. *doom-themes-org-config*.
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
+  ;;;
+  ;;; org
+  ;;;
+  (use-package org
+    :config
+
+    ;; turn on variable pitch fonts in Org Mode buffers
+    (add-hook 'org-mode-hook 'variable-pitch-mode)
+    ;; (add-hook 'org-mode-hook 'jmf/org-set-faces)
+
+    (customize-set-variable 'org-directory (expand-file-name "~/org/"))
+    (customize-set-variable 'org-agenda-files
+                            (expand-file-name "agenda.files" org-directory))
+    (customize-set-variable 'org-export-date-timestamp-format "%F")
+    (customize-set-variable 'org-log-into-drawer t)
+    (customize-set-variable 'org-outline-path-complete-in-steps nil)
+    (customize-set-variable 'org-priority-faces (quote ((65 . "red"))))
+    (customize-set-variable 'org-refile-allow-creating-parent-nodes 'confirm)
+    (customize-set-variable 'org-refile-targets '((org-agenda-files
+                                                   :maxlevel . 6)
+                                                  (nil :maxlevel . 3)))
     (customize-set-variable 'org-refile-use-outline-path (quote file))
     (customize-set-variable 'org-src-preserve-indentation nil)
     (customize-set-variable 'org-ellipsis " ▼")
@@ -567,7 +731,7 @@ The new implementation should use the recommended function
   ;;;
   (use-package evil-org
     :after org
-    :hook (org-mode . (lambda () evil-org-mode))
+    :hook org-mode
     :config
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
@@ -589,31 +753,46 @@ The new implementation should use the recommended function
                             (expand-file-name "org-roam/" org-directory))
     (customize-set-variable 'org-roam-capture-templates
                             '(("d" "default" plain
-                               "- tags ::\n\n* %?"
-                               :if-new (file+head
+                               "- tags :: \n\n* %?"
+                               :target (file+head
                                         "%<%Y%m%d%H%M%S>-${slug}.org"
                                         "#+title: ${title}\n#+date: %U\n")
                                :unnarrowed t)
                               ("l" "programming language" plain
-                               "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
-                               :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                                                  "#+title: ${title}\n")
+                               (concat "* Characteristics\n\n"
+                                       "- Family: %?\n"
+                                       "- Inspired by: \n\n"
+                                       "* Reference:\n\n")
+                               :target (file+head
+                                        "%<%Y%m%d%H%M%S>-${slug}.org"
+                                        "#+title: ${title}\n")
                                :unnarrowed t)
                               ("b" "book notes" plain
                                (file "~/org/org-roam/templates/booknote.org")
-                               :if-new (file+head
+                               :target (file+head
                                         "%<%Y%m%d%H%M%S>-${slug}.org"
                                         "#+title: ${title}\n#+filetags: Book")
                                :unnarrowed t)
                               ("v" "video notes" plain
                                (file "~/org/org-roam/templates/videonote.org")
-                               :if-new (file+head
+                               :target (file+head
                                         "%<%Y%m%d%H%M%S>-${slug}.org"
                                         "#+title: ${title}")
                                :unnarrowed t)
+                              ("c" "buds" plain
+                               (file "~/org/org-roam/templates/budnote.org")
+                               :target (file+head
+                                        "%<%Y%m%d%H%M%S>-${slug}.org"
+                                        (concat "#+title: ${title}\n\n"
+                                                "#filetags: buds\n\n"
+                                                "- tags :: \n\n"))
+                               :unnarrowed t)
                               ("p" "project" plain
-                               "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-                               :if-new (file+head
+                               (concat "* Goals\n\n%?\n\n"
+                                       "* Tasks\n\n"
+                                       "** TODO Add initial tasks\n\n"
+                                       "* Dates\n\n")
+                               :target (file+head
                                         "%<%Y%m%d%H%M%S>-${slug}.org"
                                         "#+title: ${title}\n#+filetags: Project")
                                :unnarrowed t)))
@@ -756,7 +935,6 @@ The new implementation should use the recommended function
   ;;;
   ;;; custom configurations
   ;;;
-  (require 'custom-org-config)
   (require 'custom-ide-config)
   (require 'magit)
 
