@@ -343,6 +343,8 @@ selection file.
 
 #+end_src
 
+***** Faces
+
 The next function sets face parameters for miscellaneous environments.
 The current implementation uses *set-face-attribute* which has impact on
 all current and new frames.
@@ -633,7 +635,10 @@ The next approach tries to use *use-package*'s ~:custom-font~ keyword.
 
 #+end_src
 
-Compare faces set with *jmf/org-set-faces* vs. *doom-themes-org-config*.
+***** Org package configuration
+
+Currently Org mode uses the faces defined in *doom-themes-org-config*.
+Before, the definitions from [[git:~/Projects/SystemCrafters/dotfiles/Emacs.org::master@{2025-04-06}::299][System Crafters]] were defined in section [[Faces]].
 
 #+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
   ;;;
@@ -676,55 +681,60 @@ Compare faces set with *jmf/org-set-faces* vs. *doom-themes-org-config*.
                                         "Unprocessed Inbox Items")))))
                               ("d" "Daily Agenda"
                                ((agenda "" ((org-agenda-span 'day)))))))
+#+end_src
 
-    (customize-set-variable 'org-capture-templates
-                            '(("n" "Note" entry
-                               (file+headline "inbox.org" "NOTES")
-                               "* %^{Title}\n%?\n\n%a"
-                               :empty-lines 1)
+Org capture templates.
 
-                              ("j" "Journal entry templates")
-                              ("jp" "Private journal" entry
-                               (file+olp+datetree "journal.org" "JOURNAL")
-                               "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
-                               :empty-lines 1)
-                              ("jw" "Work journal" entry
-                               (file+olp+datetree "work/journal.org")
-                               "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
-                               :empty-lines 1)
+#+Begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
 
-                              ("t" "Todo" entry
-                               (file+headline "inbox.org" "TASKS")
-                               "* TODO %^{What?}\n%?\n\n%a"
-                               :empty-lines 1)
+  (customize-set-variable 'org-capture-templates
+                          '(("n" "Note" entry
+                             (file+headline "inbox.org" "NOTES")
+                             "* %^{Title}\n%?\n\n%a"
+                             :empty-lines 1)
 
-                              ("c" "Daily todo checklist" checkitem
-                               (file+olp+datetree "daily.org")
-                               "[ ] %^{What?}\n%i\n\n%a"
-                               :empty-lines 1)
+                            ("j" "Journal entry templates")
+                            ("jp" "Private journal" entry
+                             (file+olp+datetree "journal.org" "JOURNAL")
+                             "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
+                             :empty-lines 1)
+                            ("jw" "Work journal" entry
+                             (file+olp+datetree "work/journal.org")
+                             "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
+                             :empty-lines 1)
 
-                              ("b" "Book entry templates")
-                              ("bf" "Fiction" entry
-                               (file+olp "todo.org"
-                                         "Reading" "Books" "Fiction")
-                               "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
-                              ("bn" "Non-Fiction" entry
-                               (file+olp "todo.org" "Reading" "Books" "Non-Fiction")
-                               "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
+                            ("t" "Todo" entry
+                             (file+headline "inbox.org" "TASKS")
+                             "* TODO %^{What?}\n%?\n\n%a"
+                             :empty-lines 1)
 
-                              ("x" "Web capture" entry
-                               (file+headline "inbox.org" "WEB captures")
-                               "* %:annotation\n\n%i\n%?\n%U"
-                               :empty-lines 1)))
-    (setq visual-fill-column-width 110
-          visual-fill-column-center-text t)
+                            ("c" "Daily todo checklist" checkitem
+                             (file+olp+datetree "daily.org")
+                             "[ ] %^{What?}\n%i\n\n%a"
+                             :empty-lines 1)
 
-    :bind (("C-c a" . org-agenda)
-           ("C-c x" . org-capture)
-           ("C-c l" . org-store-link)
-           :map org-mode-map
-           ("C-c L" . org-toggle-link-display)
-           ("C-M-i" . completion-at-point)))
+                            ("b" "Book entry templates")
+                            ("bf" "Fiction" entry
+                             (file+olp "todo.org"
+                                       "Reading" "Books" "Fiction")
+                             "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
+                            ("bn" "Non-Fiction" entry
+                             (file+olp "todo.org" "Reading" "Books" "Non-Fiction")
+                             "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
+
+                            ("x" "Web capture" entry
+                             (file+headline "inbox.org" "WEB captures")
+                             "* %:annotation\n\n%i\n%?\n%U"
+                             :empty-lines 1)))
+  (setq visual-fill-column-width 110
+        visual-fill-column-center-text t)
+
+  :bind (("C-c a" . org-agenda)
+         ("C-c x" . org-capture)
+         ("C-c l" . org-store-link)
+         :map org-mode-map
+         ("C-c L" . org-toggle-link-display)
+         ("C-M-i" . completion-at-point)))
 
   ;;;
   ;;; evil-org
@@ -783,9 +793,7 @@ Compare faces set with *jmf/org-set-faces* vs. *doom-themes-org-config*.
                                (file "~/org/org-roam/templates/budnote.org")
                                :target (file+head
                                         "%<%Y%m%d%H%M%S>-${slug}.org"
-                                        (concat "#+title: ${title}\n\n"
-                                                "#filetags: buds\n\n"
-                                                "- tags :: \n\n"))
+                                        "#+title: ${title}")
                                :unnarrowed t)
                               ("p" "project" plain
                                (concat "* Goals\n\n%?\n\n"
@@ -950,14 +958,20 @@ Compare faces set with *jmf/org-set-faces* vs. *doom-themes-org-config*.
          (lambda (d)
                   (file-name-as-directory (expand-file-name d "~/.config")))
                 '("~/"
-                  "Emacs_from_Scratch"
-                  "X11"
+                  "bash"
                   "chemacs"
                   "doom"
+                  "Emacs_from_Scratch"
+                  "git"
                   "i3"
                   "i3status"
+                  "mbsync"
                   "pulse"
+                  "spacemacs.d"
+                  "systemd"
+                  "tmux"
                   "vim"
+                  "X11"
                   "yapf"
                   "zsh"
                   "~/.local/share/oh-my-zsh/custom"
@@ -1027,7 +1041,7 @@ Compare faces set with *jmf/org-set-faces* vs. *doom-themes-org-config*.
 
 **** News and E-Mail
 
-***** COMMENT News
+***** News
 
 Does Gnus offer configuration using *use-package*?
 
