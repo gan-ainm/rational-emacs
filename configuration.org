@@ -14,7 +14,7 @@ If something goes wrong, quickly uncomment the prepared debug settings.
   ;; (setq debug-on-error t)
 #+end_src
 
-** Custom File  
+** Custom File
 
 #+begin_src emacs-lisp
   ;;;
@@ -58,11 +58,11 @@ The Crafted Evil collection comprises the packages
 - *evil*
 - *evil-collection*
 - *evil-nerd-commenter*
-  
+
 #+begin_src emacs-lisp
   (require 'crafted-evil-packages)
 #+end_src
-  
+
 **** IDE
 
 The Crafted IDE collection comprises the packages
@@ -70,12 +70,12 @@ The Crafted IDE collection comprises the packages
   spaces vs. tabs, etc.
 - [[git:~/.local/share/crafted-emacs/elpa/aggressive-indent-1.10.0/README.md::literal-config@{2025-02-03}::1][aggressive-indent]] :: always keep code indented
 - *ibuffer-project* :: group project buffers when listing
-  
+
 #+begin_src emacs-lisp
   (require 'crafted-ide-packages)
 #+end_src
 
-**** Completion  
+**** Completion
 
 The Crafted Completion collection comprises the packages
 
@@ -92,8 +92,8 @@ The Crafted Completion collection comprises the packages
 #+begin_src emacs-lisp
   (require 'crafted-completion-packages)
 #+end_src
-  
-**** UI  
+
+**** UI
 
 - all-the-icons :: A library for inserting Developer icons
 - elisp-demos :: Elisp API Demos
@@ -103,16 +103,16 @@ The Crafted Completion collection comprises the packages
 #+begin_src emacs-lisp
   (require 'crafted-ui-packages)
 #+end_src
-  
-**** Workspaces  
+
+**** Workspaces
 
 At the moment, the only selected package is tabspaces to leverage
 tab-bar and project for buffer-isolated workspaces
 #+begin_src emacs-lisp
   (require 'crafted-workspaces-packages)
- 
+
 #+end_src
-  
+
 **** Writing
 
 - [[git:~/.local/share/crafted-emacs/elpa/markdown-mode-2.6/README.md::literal-config@{2025-02-04}::11][markdown-mode]] :: Major mode for Markdown-formatted text
@@ -250,7 +250,7 @@ selection file.
   (add-to-list 'package-selected-packages 'modus-themes)
   (add-to-list 'package-selected-packages 'ef-themes)
 #+end_src
-    
+
 **** Other
 
 #+begin_src emacs-lisp
@@ -652,42 +652,62 @@ Before, the definitions from [[git:~/Projects/SystemCrafters/dotfiles/Emacs.org:
     ;; turn on variable pitch fonts in Org Mode buffers
     (add-hook 'org-mode-hook 'variable-pitch-mode)
     ;; (add-hook 'org-mode-hook 'jmf/org-set-faces)
-
-    (customize-set-variable 'org-directory (expand-file-name "~/org/"))
-    (customize-set-variable 'org-agenda-files
-                            (expand-file-name "agenda.files" org-directory))
-    (customize-set-variable 'org-export-date-timestamp-format "%F")
-    (customize-set-variable 'org-log-into-drawer t)
-    (customize-set-variable 'org-outline-path-complete-in-steps nil)
-    (customize-set-variable 'org-priority-faces (quote ((65 . "red"))))
-    (customize-set-variable 'org-refile-allow-creating-parent-nodes 'confirm)
-    (customize-set-variable 'org-refile-targets '((org-agenda-files
-                                                   :maxlevel . 6)
-                                                  (nil :maxlevel . 3)))
-    (customize-set-variable 'org-refile-use-outline-path (quote file))
-    (customize-set-variable 'org-src-preserve-indentation nil)
-    (customize-set-variable 'org-ellipsis " ▼")
-    (customize-set-variable 'evil-auto-indent t)
-    (customize-set-variable 'org-tags-column -77)
-    (customize-set-variable 'org-agenda-custom-commands
-                            '(("p" "Planning"
-                               ((tags-todo "+@planning"
-                                           ((org-agenda-overriding-header
-                                             "Planning Tasks")))
-                                (tags-todo "-{.*}"
-                                           ((org-agenda-overriding-header
-                                             "Untagged Tasks")))
-                                (todo ".*"
-                                      ((org-agenda-files '("~/org/inbox.org"))
-                                       (org-agenda-overriding-header
-                                        "Unprocessed Inbox Items")))))
-                              ("d" "Daily Agenda"
-                               ((agenda "" ((org-agenda-span 'day)))))))
 #+end_src
+
+Define the location of the *org* directory.
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
+  (customize-set-variable 'org-directory (expand-file-name "~/org/"))
+#+end_src
+
+Set to full ISO 8601 date string.
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
+  (customize-set-variable 'org-export-date-timestamp-format "%F")
+#+end_src
+
+Lock parent TODO items until children are done.
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
+  (customize-set-variable 'org-enforce-todo-dependencies t)
+  (customize-set-variable 'org-log-into-drawer t)
+  (customize-set-variable 'org-outline-path-complete-in-steps nil)
+  (customize-set-variable 'org-priority-faces (quote ((65 . "red"))))
+  (customize-set-variable 'org-refile-allow-creating-parent-nodes 'confirm)
+  (customize-set-variable 'org-refile-use-outline-path (quote file))
+  (customize-set-variable 'org-src-preserve-indentation nil)
+  (customize-set-variable 'org-ellipsis " ▼")
+  (customize-set-variable 'evil-auto-indent t)
+  (customize-set-variable 'org-tags-column -77)
+#+end_src
+****** Agenda
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
+  (customize-set-variable 'org-agenda-files
+                          (expand-file-name "agenda.files" org-directory))
+  (customize-set-variable 'org-refile-targets '((org-agenda-files
+                                                 :maxlevel . 6)
+                                                (nil :maxlevel . 3)))
+  (customize-set-variable 'org-agenda-custom-commands
+                          '(("p" "Planning"
+                             ((tags-todo "+@planning"
+                                         ((org-agenda-overriding-header
+                                           "Planning Tasks")))
+                              (tags-todo "-{.*}"
+                                         ((org-agenda-overriding-header
+                                           "Untagged Tasks")))
+                              (todo ".*"
+                                    ((org-agenda-files '("~/org/inbox.org"))
+                                     (org-agenda-overriding-header
+                                      "Unprocessed Inbox Items")))))
+                            ("d" "Daily Agenda"
+                             ((agenda "" ((org-agenda-span 'day)))))))
+#+end_src
+
+****** Capture
 
 Org capture templates.
 
-#+Begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
 
   (customize-set-variable 'org-capture-templates
                           '(("n" "Note" entry
@@ -728,16 +748,29 @@ Org capture templates.
                              (file+headline "inbox.org" "WEB captures")
                              "* %:annotation\n\n%i\n%?\n%U"
                              :empty-lines 1)))
+#+end_src
+
+****** Other variables
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
   (setq visual-fill-column-width 110
         visual-fill-column-center-text t)
+#+end_src
 
+****** Bindings
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
   :bind (("C-c a" . org-agenda)
          ("C-c x" . org-capture)
          ("C-c l" . org-store-link)
          :map org-mode-map
          ("C-c L" . org-toggle-link-display)
          ("C-M-i" . completion-at-point)))
+#+end_src
 
+****** Evil
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
   ;;;
   ;;; evil-org
   ;;;
@@ -747,89 +780,137 @@ Org capture templates.
     :config
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
+#+end_src
 
+****** Org Roam
+
+******* Initialization
+
+Before loading *org-roam*, we must set the proper database connector.
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
   ;;;
   ;;; org-roam
   ;;;
   (use-package org-roam
     :init
     (setq org-roam-database-connector 'sqlite-builtin)
-    :config
-    (defun jmf/org-roam-capture-inbox ()
-      (interactive)
-      (org-roam-capture- :node (org-roam-node-create)
-                         :templates '(("i" "inbox" plain "* %?"
-                                       :if-new (file+head "Inbox.org" "#+title: Inbox\n")))))
+#+end_src
 
-    (customize-set-variable 'org-roam-directory
-                            (expand-file-name "org-roam/" org-directory))
-    (customize-set-variable 'org-roam-capture-templates
-                            '(("d" "default" plain
-                               "- tags :: \n\n* %?"
-                               :target (file+head
-                                        "%<%Y%m%d%H%M%S>-${slug}.org"
-                                        "#+title: ${title}\n#+date: %U\n")
-                               :unnarrowed t)
-                              ("l" "programming language" plain
-                               (concat "* Characteristics\n\n"
-                                       "- Family: %?\n"
-                                       "- Inspired by: \n\n"
-                                       "* Reference:\n\n")
-                               :target (file+head
-                                        "%<%Y%m%d%H%M%S>-${slug}.org"
-                                        "#+title: ${title}\n")
-                               :unnarrowed t)
-                              ("b" "book notes" plain
-                               (file "~/org/org-roam/templates/booknote.org")
-                               :target (file+head
-                                        "%<%Y%m%d%H%M%S>-${slug}.org"
-                                        "#+title: ${title}\n#+filetags: Book")
-                               :unnarrowed t)
-                              ("v" "video notes" plain
-                               (file "~/org/org-roam/templates/videonote.org")
-                               :target (file+head
-                                        "%<%Y%m%d%H%M%S>-${slug}.org"
-                                        "#+title: ${title}")
-                               :unnarrowed t)
-                              ("c" "buds" plain
-                               (file "~/org/org-roam/templates/budnote.org")
-                               :target (file+head
-                                        "%<%Y%m%d%H%M%S>-${slug}.org"
-                                        "#+title: ${title}")
-                               :unnarrowed t)
-                              ("p" "project" plain
-                               (concat "* Goals\n\n%?\n\n"
-                                       "* Tasks\n\n"
-                                       "** TODO Add initial tasks\n\n"
-                                       "* Dates\n\n")
-                               :target (file+head
-                                        "%<%Y%m%d%H%M%S>-${slug}.org"
-                                        "#+title: ${title}\n#+filetags: Project")
-                               :unnarrowed t)))
-    (customize-set-variable 'org-roam-capture-ref-templates
-                            '(("r" "ref" plain "%?" :target
-                               (file+head "${slug}.org" "#+title: ${title}\n\n%i\n\n")
-                               :unnarrowed t)))
+******* Configuration
 
-    (org-roam-db-autosync-mode)
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
+  :config
+  (customize-set-variable 'org-roam-directory
+                          (expand-file-name "org-roam/" org-directory))
 
-    ;; If you're using a vertical completion framework,
-    ;; you might want a more informative completion interface
-    (when (or (bound-and-true-p fido-vertical-mode)
-              (bound-and-true-p icomplete-vertical-mode)
-              (bound-and-true-p vertico))
-      (customize-set-variable 'org-roam-node-display-template
-                              (concat "${title:*} "
-                                      (propertize "${tags:10}" 'face 'org-tag))))
-    :bind (("C-c r b" . jmf/org-roam-capture-inbox)
-           ("C-c r c" . org-roam-capture)
-           ("C-c r f" . org-roam-node-find)
-           ("C-c r g" . org-roam-graph)
-           ("C-c r i" . org-roam-node-insert)
-           ("C-c r j" . org-roam-dailies-capture-today)
-           ("C-c r l" . org-roam-buffer-toggle)))
+  (org-roam-db-autosync-mode)
+#+end_src
 
-  ;;;
+******** Capture
+
+First, we define a function to capture into the org-roam inbox file.
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
+  (defun jmf/org-roam-capture-inbox ()
+    (interactive)
+    (org-roam-capture- :node (org-roam-node-create)
+                       :templates '(("i" "inbox" plain "* %?"
+                                     :if-new (file+head "Inbox.org" "#+title: Inbox\n")))))
+#+end_src
+
+The capture templates for *org-roam*.
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
+  (customize-set-variable 'org-roam-capture-templates
+                          '(("d" "default" plain
+                             "- tags :: \n\n* %?"
+                             :target (file+head
+                                      "%<%Y%m%d%H%M%S>-${slug}.org"
+                                      "#+title: ${title}\n#+date: %U\n")
+                             :unnarrowed t)
+                            ("l" "programming language" plain
+                             (concat "* Characteristics\n\n"
+                                     "- Family: %?\n"
+                                     "- Inspired by: \n\n"
+                                     "* Reference:\n\n")
+                             :target (file+head
+                                      "%<%Y%m%d%H%M%S>-${slug}.org"
+                                      "#+title: ${title}\n")
+                             :unnarrowed t)
+                            ("b" "book notes" plain
+                             (file "~/org/org-roam/templates/booknote.org")
+                             :target (file+head
+                                      "%<%Y%m%d%H%M%S>-${slug}.org"
+                                      "#+title: ${title}\n#+filetags: Book")
+                             :unnarrowed t)
+                            ("v" "video notes" plain
+                             (file "~/org/org-roam/templates/videonote.org")
+                             :target (file+head
+                                      "%<%Y%m%d%H%M%S>-${slug}.org"
+                                      "#+title: ${title}")
+                             :unnarrowed t)
+                            ("c" "buds" plain
+                             (file "~/org/org-roam/templates/budnote.org")
+                             :target (file+head
+                                      "%<%Y%m%d%H%M%S>-${slug}.org"
+                                      "#+title: ${title}")
+                             :unnarrowed t)
+                            ("p" "project" plain
+                             (concat "* Goals\n\n%?\n\n"
+                                     "* Tasks\n\n"
+                                     "** TODO Add initial tasks\n\n"
+                                     "* Dates\n\n")
+                             :target (file+head
+                                      "%<%Y%m%d%H%M%S>-${slug}.org"
+                                      "#+title: ${title}\n#+filetags: Project")
+                             :unnarrowed t)))
+#+end_src
+
+Define template for ref capture.
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
+  (customize-set-variable 'org-roam-capture-ref-templates
+                          '(("r" "ref" plain "%?" :target
+                             (file+head "${slug}.org" "#+title: ${title}\n\n%i\n\n")
+                             :unnarrowed t)))
+#+end_src
+
+******** Display template
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
+  ;; If you're using a vertical completion framework,
+  ;; you might want a more informative completion interface
+  (when (or (bound-and-true-p fido-vertical-mode)
+            (bound-and-true-p icomplete-vertical-mode)
+            (bound-and-true-p vertico))
+    (customize-set-variable 'org-roam-node-display-template
+                            (concat "${title:*} "
+                                    (propertize "${tags:10}" 'face 'org-tag))))
+#+end_src
+
+******** Bindings
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
+  :bind (("C-c r b" . jmf/org-roam-capture-inbox)
+         ("C-c r c" . org-roam-capture)
+         ("C-c r f" . org-roam-node-find)
+         ("C-c r g" . org-roam-graph)
+         ("C-c r i" . org-roam-node-insert)
+         ("C-c r j" . org-roam-dailies-capture-today)
+         ("C-c r l" . org-roam-buffer-toggle)))
+#+end_src
+
+****** Roam Protocol
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
+  ;; If using org-roam-protocol
+  (use-package org-roam-protocol)
+#+end_src
+
+****** Org Present
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
+  ;;
   ;;; org-present
   ;;;
   (use-package org-present
@@ -852,7 +933,7 @@ Org capture templates.
                     (org-verbatim (:height 1.5) org-verbatim)
                     (org-block (:height 1.25) org-block)
                     (org-block-begin-line (:height 0.7) org-block)))
-      
+
       ;; register hooks with org-present
       (add-hook 'org-present-mode-hook 'jmf/org-present-start)
       (add-hook 'org-present-mode-quit-hook 'jmf/org-present-end)
@@ -884,20 +965,39 @@ Org capture templates.
       ;; stop centering the document
       (visual-fill-column-mode 0)
       (visual-line-mode 0)))
+#+end_src
 
+****** Faces
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
   (use-package org-faces)
+#+end_src
+
+****** Modern
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
   ;; (require 'org-superstar)
   (use-package org-modern)
+#+end_src
 
-  ;; If using org-roam-protocol
-  (use-package org-roam-protocol)
+****** EDiff behavior
 
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
   (with-eval-after-load 'outline
     (add-hook 'ediff-prepare-buffer-hook #'show-all))
+#+end_src
 
+****** Mermaid diagrams
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
   (use-package ob-mermaid
     :config
     (setq ob-mermaid-cli-path "/usr/bin/mmdc"))
+#+end_src
+
+****** Protesilaos' Popup Frames
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
   ;;;
   ;;; Prot's popup frames
   ;;;
@@ -937,6 +1037,11 @@ Org capture templates.
   (prot-window-define-with-popup-frame tmr)
 
   (add-hook 'tmr-timer-created-functions #'prot-window-delete-popup-frame)
+#+end_src
+
+****** End of org configuration
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
   (provide 'custom-org-config)
 #+end_src
 
