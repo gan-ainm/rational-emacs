@@ -280,6 +280,8 @@ selection file.
   ;; EMMS
   (add-to-list 'package-selected-packages 'emms)
   (add-to-list 'package-selected-packages 'emms-player-simple-mpv)
+  ;;; ledger
+  (add-to-list 'package-selected-packages 'ledger-mode)
   ;;;
   ;;; install all selected packages
   ;;;
@@ -1201,6 +1203,20 @@ The current configuration is using *mbsync* and *mu4e*.
   (use-package all-the-icons-dired
     :hook dired-mode)
 
+#+end_src
+
+**** Ledger
+
+The configuration and data of *ledger* should be in the usual places.
+
+#+begin_src emacs-lisp
+  (use-package ledger-mode
+    :config
+    (customize-set-variable 'ledger-default-date-format ledger-iso-date-format)
+    (customize-set-variable 'ledger-init-file-name "~/.config/ledger/ledgerrc")
+    (customize-set-variable 'ledger-source-directory "~/.local/share/ledger")
+    (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
+    :mode "\\.ledger\\'")
 #+end_src
 
 **** Other
