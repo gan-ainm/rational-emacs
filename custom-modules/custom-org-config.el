@@ -11,14 +11,6 @@
 ;;;
 (use-package crafted-org-config)
 
-;;;
-;;; Theming
-;;;
-(defvar jmf/fixed-width-font "JetBrains Mono"
-  "The font used for monospaced text.")
-(defvar jmf/variable-width-font "Iosevka Aile Thin"
-  "The font used for document text.")
-
 (defun jmf/org-set-faces ()
   ;; set faces for orgmode
 
@@ -31,62 +23,52 @@
                   (org-level-6 . 1.0)
                   (org-level-7 . 1.0)
                   (org-level-8 . 1.0)))
-    (set-face-attribute (car face)
-                        nil
-                        :font jmf/variable-width-font
-                        :weight 'medium
-                        :height (cdr face)))
+    (face-remap-add-relative (car face)
+                             :font (font-spec :name jmf/variable-width-font)
+                             :weight 'medium
+                             :height (cdr face)
+                             :inherit (format "outline-%s" (substring (prin1-to-string (car face)) -1))))
 
   ;; Make the document title a bit bigger
-  (set-face-attribute 'org-document-title
-                      nil
-                      :font jmf/variable-width-font
-                      :weight 'bold
-                      :height 1.3)
-  ;;(set-face-attribute 'fixed-pitch nil :font jmf/fixed-width-font :weight 'light :height 100)
-  ;;(set-face-attribute 'variable-pitch nil :font jmf/variable-width-font :weight 'light :height 1.0)
+  (face-remap-add-relative 'org-document-title
+                           :font (font-spec :name jmf/variable-width-font)
+                           :weight 'bold
+                           :height 1.3)
+  ;;(set-face-attribute 'fixed-pitch nil :font (font-spec :name jmf/fixed-width-font :weight 'light :height 100))
+  ;;(set-face-attribute 'variable-pitch nil :font (font-spec :name jmf/variable-width-font :weight 'light :height 1.0))
 
   ;; Make sure certain org faces use the fixed-pitch face when variable-pith-mode is on
-  (set-face-attribute 'default
-                      nil
-                      :font jmf/fixed-width-font
-                      :weight 'light
-                      :height 100)
-  (set-face-attribute 'fixed-pitch
-                      nil
-                      :font jmf/fixed-width-font
-                      :weight 'light
-                      :height 1.0)
-  (set-face-attribute 'variable-pitch
-                      nil
-                      :font jmf/variable-width-font
-                      :weight 'light
-                      :height 1.0)
-  (set-face-attribute 'org-block
-                      nil
-                      :foreground 'unspecified
-                      :inherit 'fixed-pitch)
-  (set-face-attribute 'org-table
-                      nil
-                      :inherit 'fixed-pitch)
-  (set-face-attribute 'org-formula
-                      nil
-                      :inherit 'fixed-pitch)
-  (set-face-attribute 'org-code
-                      nil
-                      :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-verbatim
-                      nil
-                      :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-special-keyword
-                      nil
-                      :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-meta-line
-                      nil
-                      :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-checkbox
-                      nil
-                      :inherit 'fixed-pitch))
+  (face-remap-add-relative 'default
+                           :font (font-spec :name jmf/fixed-width-font)
+                           :weight 'light
+                           :height 0.65)
+  (face-remap-add-relative 'fixed-pitch
+                           :font (font-spec :name jmf/fixed-width-font)
+                           :weight 'light
+                           :height 1.0)
+  (face-remap-add-relative 'variable-pitch
+                           :font (font-spec :name jmf/variable-width-font)
+                           :weight 'light
+                           :height 1.0)
+  (face-remap-add-relative 'org-block
+                           :inherit 'fixed-pitch
+                           :foreground 'unspecified)
+  (face-remap-add-relative 'org-table 'fixed-pitch)
+  (face-remap-add-relative 'org-formula 'fixed-pitch)
+  (face-remap-add-relative 'org-code 'shadow 'fixed-pitch)
+  (face-remap-add-relative 'org-verbatim 'shadow 'fixed-pitch)
+  (face-remap-add-relative 'org-special-keyword
+                           'font-lock-comment-face
+                           'fixed-pitch)
+  (face-remap-add-relative 'org-meta-line 'font-lock-comment-face 'fixed-pitch)
+  (face-remap-add-relative 'org-checkbox 'fixed-pitch)
+)
+
+(defun jmf/org-code-faces ()
+  (face-remap-add-relative 'org-code 'shadow 'fixed-pitch)
+  (face-remap-add-relative 'org-block
+                           :inherit 'fixed-pitch
+                           :foreground 'unspecified))
 
 ;;;
 ;;; org
@@ -96,93 +78,105 @@
 
   ;; turn on variable pitch fonts in Org Mode buffers
   (add-hook 'org-mode-hook 'variable-pitch-mode)
-  (add-hook 'org-mode-hook 'jmf/org-set-faces)
+  (add-hook 'org-mode-hook 'jmf/org-code-faces)
 
-  (customize-set-variable 'org-directory (expand-file-name "~/org/"))
-  (customize-set-variable 'org-agenda-files
-                          (expand-file-name "agenda.files" org-directory))
-  (customize-set-variable 'org-export-date-timestamp-format "%F")
-  (customize-set-variable 'org-log-into-drawer t)
-  (customize-set-variable 'org-outline-path-complete-in-steps nil)
-  (customize-set-variable 'org-priority-faces (quote ((65 . "red"))))
-  (customize-set-variable 'org-refile-allow-creating-parent-nodes 'confirm)
-  (customize-set-variable 'org-refile-targets '((org-agenda-files
-                                                 :maxlevel . 6)))
-  (customize-set-variable 'org-refile-use-outline-path (quote file))
-  (customize-set-variable 'org-src-preserve-indentation nil)
-  (customize-set-variable 'org-ellipsis " ▼")
-  (customize-set-variable 'evil-auto-indent t)
-  (customize-set-variable 'org-tags-column -77)
-  (customize-set-variable 'org-agenda-custom-commands
-                          '(("p" "Planning"
-                             ((tags-todo "+@planning"
-                                         ((org-agenda-overriding-header
-                                           "Planning Tasks")))
-                              (tags-todo "-{.*}"
-                                         ((org-agenda-overriding-header
-                                           "Untagged Tasks")))
-                              (todo ".*"
-                                    ((org-agenda-files '("~/org/inbox.org"))
-                                     (org-agenda-overriding-header
-                                      "Unprocessed Inbox Items")))))
-                            ("d" "Daily Agenda"
-                             ((agenda "" ((org-agenda-span 'day)))))))
+(customize-set-variable 'org-directory (expand-file-name "~/org/"))
 
-  (customize-set-variable 'org-capture-templates
-                          '(("n" "Note" entry
-                             (file+headline "inbox.org" "NOTES")
-                             "* %^{Title}\n%?\n\n%a"
-                             :empty-lines 1)
+(customize-set-variable 'org-export-date-timestamp-format "%F")
 
-                            ("j" "Journal entry templates")
-                            ("jp" "Private journal" entry
-                             (file+olp+datetree "journal.org" "JOURNAL")
-                             "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
-                             :empty-lines 1)
-                            ("jw" "Work journal" entry
-                             (file+olp+datetree "work/journal.org")
-                             "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
-                             :empty-lines 1)
+(customize-set-variable 'org-enforce-todo-dependencies t)
+(customize-set-variable 'org-log-into-drawer t)
+(customize-set-variable 'org-outline-path-complete-in-steps nil)
+(customize-set-variable 'org-priority-faces (quote ((65 . "red"))))
+(customize-set-variable 'org-refile-allow-creating-parent-nodes 'confirm)
+(customize-set-variable 'org-refile-use-outline-path (quote file))
+(customize-set-variable 'org-src-preserve-indentation nil)
+(customize-set-variable 'org-ellipsis " ▼")
+(customize-set-variable 'evil-auto-indent t)
+(customize-set-variable 'org-tags-column -77)
 
-                            ("t" "Todo" entry
-                             (file+headline "inbox.org" "TASKS")
-                             "* TODO %^{What?}\n%?\n\n%a"
-                             :empty-lines 1)
+(customize-set-variable 'org-agenda-files
+                        (expand-file-name "agenda.files" org-directory))
+(customize-set-variable 'org-refile-targets '((org-agenda-files
+                                               :maxlevel . 6)
+                                              (nil :maxlevel . 3)))
 
-                            ("c" "Daily todo checklist" checkitem
-                             (file+olp+datetree "daily.org")
-                             "[ ] %^{What?}\n%i\n\n%a"
-                             :empty-lines 1)
+(customize-set-variable 'org-agenda-custom-commands
+                        '(("p" "Planning"
+                           ((tags-todo "+@planning"
+                                       ((org-agenda-overriding-header
+                                         "Planning Tasks")))
+                            (tags-todo "-{.*}"
+                                       ((org-agenda-overriding-header
+                                         "Untagged Tasks")))
+                            (alltodo ""
+                                  ((org-agenda-files '("~/org/inbox.org"))
+                                   (org-agenda-overriding-header
+                                    "Unprocessed Inbox Items")))))
+                          ("i" "Inbox"
+                           ((alltodo ""
+                                  ((org-agenda-files '("~/org/inbox.org"))
+                                   (org-agenda-overriding-header
+                                    "Unprocessed Inbox Items")))))
+                          ("d" "Daily Agenda"
+                           ((agenda "" ((org-agenda-span 'day)))))))
 
-                            ("b" "Book entry templates")
-                            ("bf" "Fiction" entry
-                             (file+olp "todo.org"
-                                       "Reading" "Books" "Fiction")
-                             "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
-                            ("bn" "Non-Fiction" entry
-                             (file+olp "todo.org" "Reading" "Books" "Non-Fiction")
-                             "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
+(customize-set-variable 'org-capture-templates
+                        '(("n" "Note" entry
+                           (file+headline "inbox.org" "NOTES")
+                           "* %^{Title}\n%?\n\n%a"
+                           :empty-lines 1)
 
-                            ("x" "Web capture" entry
-                             (file+headline "inbox.org" "WEB captures")
-                             "* %:annotation\n\n%i\n%?\n%U"
-                             :empty-lines 1)))
-  (setq visual-fill-column-width 110
-        visual-fill-column-center-text t)
+                          ("j" "Journal entry templates")
+                          ("jp" "Private journal" entry
+                           (file+olp+datetree "journal.org" "JOURNAL")
+                           "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
+                           :empty-lines 1)
+                          ("jw" "Work journal" entry
+                           (file+olp+datetree "work/journal.org")
+                           "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
+                           :empty-lines 1)
 
-  :bind (("C-c a" . org-agenda)
-         ("C-c x" . org-capture)
-         ("C-c l" . org-store-link)
-         :map org-mode-map
-         ("C-c L" . org-toggle-link-display)
-         ("C-M-i" . completion-at-point)))
+                          ("t" "Todo" entry
+                           (file+headline "inbox.org" "TASKS")
+                           "* TODO %^{What?}\n%?\n\n%a"
+                           :empty-lines 1)
+
+                          ("c" "Daily todo checklist" checkitem
+                           (file+olp+datetree "daily.org")
+                           "[ ] %^{What?}\n%i\n\n%a"
+                           :empty-lines 1)
+
+                          ("b" "Book entry templates")
+                          ("bf" "Fiction" entry
+                           (file+olp "todo.org"
+                                     "Reading" "Books" "Fiction")
+                           "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
+                          ("bn" "Non-Fiction" entry
+                           (file+olp "todo.org" "Reading" "Books" "Non-Fiction")
+                           "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
+
+                          ("x" "Web capture" entry
+                           (file+headline "inbox.org" "WEB captures")
+                           "* %:annotation\n\n%i\n%?\n%U"
+                           :empty-lines 1)))
+
+(setq visual-fill-column-width 110
+      visual-fill-column-center-text t)
+
+:bind (("C-c a" . org-agenda)
+       ("C-c x" . org-capture)
+       ("C-c l" . org-store-link)
+       :map org-mode-map
+       ("C-c L" . org-toggle-link-display)
+       ("C-M-i" . completion-at-point)))
 
 ;;;
 ;;; evil-org
 ;;;
 (use-package evil-org
   :after org
-  :hook (org-mode . (lambda () evil-org-mode))
+  :hook org-mode
   :config
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
@@ -193,69 +187,89 @@
 (use-package org-roam
   :init
   (setq org-roam-database-connector 'sqlite-builtin)
-  :config
-  (defun jmf/org-roam-capture-inbox ()
-    (interactive)
-    (org-roam-capture- :node (org-roam-node-create)
-                       :templates '(("i" "inbox" plain "* %?"
-                                    :if-new (file+head "Inbox.org" "#+title: Inbox\n")))))
 
-  (customize-set-variable 'org-roam-directory
-                          (expand-file-name "org-roam/" org-directory))
-  (customize-set-variable 'org-roam-capture-templates
-        '(("d" "default" plain
-           "- tags ::\n\n* %?"
-           :if-new (file+head
-                    "%<%Y%m%d%H%M%S>-${slug}.org"
-                    "#+title: ${title}\n#+date: %U\n")
-           :unnarrowed t)
-          ("l" "programming language" plain
-           "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                              "#+title: ${title}\n")
-           :unnarrowed t)
-          ("b" "book notes" plain
-           (file "~/org/org-roam/templates/booknote.org")
-           :if-new (file+head
-                    "%<%Y%m%d%H%M%S>-${slug}.org"
-                    "#+title: ${title}\n#+filetags: Book")
-           :unnarrowed t)
-          ("v" "video notes" plain
-           (file "~/org/org-roam/templates/videonote.org")
-           :if-new (file+head
-                    "%<%Y%m%d%H%M%S>-${slug}.org"
-                    "#+title: ${title}")
-           :unnarrowed t)
-          ("p" "project" plain
-           "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-           :if-new (file+head
-                    "%<%Y%m%d%H%M%S>-${slug}.org"
-                    "#+title: ${title}\n#+filetags: Project")
-           :unnarrowed t)))
-        (customize-set-variable 'org-roam-capture-ref-templates
-        '(("r" "ref" plain "%?" :target
-           (file+head "${slug}.org" "#+title: ${title}\n\n%i\n\n")
-           :unnarrowed t)))
-  
-  (org-roam-db-autosync-mode)
+:config
+(customize-set-variable 'org-roam-directory
+                        (expand-file-name "org-roam/" org-directory))
 
-  ;; If you're using a vertical completion framework,
-  ;; you might want a more informative completion interface
-  (when (or (bound-and-true-p fido-vertical-mode)
-            (bound-and-true-p icomplete-vertical-mode)
-            (bound-and-true-p vertico))
-    (customize-set-variable 'org-roam-node-display-template
-                            (concat "${title:*} "
-                                    (propertize "${tags:10}" 'face 'org-tag))))
-  :bind (("C-c r b" . jmf/org-roam-capture-inbox)
-         ("C-c r c" . org-roam-capture)
-         ("C-c r f" . org-roam-node-find)
-         ("C-c r g" . org-roam-graph)
-         ("C-c r i" . org-roam-node-insert)
-         ("C-c r j" . org-roam-dailies-capture-today)
-         ("C-c r l" . org-roam-buffer-toggle)))
+(org-roam-db-autosync-mode)
 
-;;;
+(defun jmf/org-roam-capture-inbox ()
+  (interactive)
+  (org-roam-capture- :node (org-roam-node-create)
+                     :templates '(("i" "inbox" plain "* %?"
+                                   :if-new (file+head "Inbox.org" "#+title: Inbox\n")))))
+
+(customize-set-variable 'org-roam-capture-templates
+                        '(("d" "default" plain
+                           "- tags :: \n\n* %?"
+                           :target (file+head
+                                    "%<%Y%m%d%H%M%S>-${slug}.org"
+                                    "#+title: ${title}\n#+date: %U\n")
+                           :unnarrowed t)
+                          ("l" "programming language" plain
+                           (concat "* Characteristics\n\n"
+                                   "- Family: %?\n"
+                                   "- Inspired by: \n\n"
+                                   "* Reference:\n\n")
+                           :target (file+head
+                                    "%<%Y%m%d%H%M%S>-${slug}.org"
+                                    "#+title: ${title}\n")
+                           :unnarrowed t)
+                          ("b" "book notes" plain
+                           (file "~/org/org-roam/templates/booknote.org")
+                           :target (file+head
+                                    "%<%Y%m%d%H%M%S>-${slug}.org"
+                                    "#+title: ${title}\n#+filetags: Book")
+                           :unnarrowed t)
+                          ("v" "video notes" plain
+                           (file "~/org/org-roam/templates/videonote.org")
+                           :target (file+head
+                                    "%<%Y%m%d%H%M%S>-${slug}.org"
+                                    "#+title: ${title}")
+                           :unnarrowed t)
+                          ("c" "buds" plain
+                           (file "~/org/org-roam/templates/budnote.org")
+                           :target (file+head
+                                    "%<%Y%m%d%H%M%S>-${slug}.org"
+                                    "#+title: ${title}")
+                           :unnarrowed t)
+                          ("p" "project" plain
+                           (concat "* Goals\n\n%?\n\n"
+                                   "* Tasks\n\n"
+                                   "** TODO Add initial tasks\n\n"
+                                   "* Dates\n\n")
+                           :target (file+head
+                                    "%<%Y%m%d%H%M%S>-${slug}.org"
+                                    "#+title: ${title}\n#+filetags: Project")
+                           :unnarrowed t)))
+
+(customize-set-variable 'org-roam-capture-ref-templates
+                        '(("r" "ref" plain "%?" :target
+                           (file+head "${slug}.org" "#+title: ${title}\n\n%i\n\n")
+                           :unnarrowed t)))
+
+;; If you're using a vertical completion framework,
+;; you might want a more informative completion interface
+(when (or (bound-and-true-p fido-vertical-mode)
+          (bound-and-true-p icomplete-vertical-mode)
+          (bound-and-true-p vertico))
+  (customize-set-variable 'org-roam-node-display-template
+                          (concat "${title:*} "
+                                  (propertize "${tags:10}" 'face 'org-tag))))
+
+:bind (("C-c r b" . jmf/org-roam-capture-inbox)
+       ("C-c r c" . org-roam-capture)
+       ("C-c r f" . org-roam-node-find)
+       ("C-c r g" . org-roam-graph)
+       ("C-c r i" . org-roam-node-insert)
+       ("C-c r j" . org-roam-dailies-capture-today)
+       ("C-c r l" . org-roam-buffer-toggle)))
+
+;; If using org-roam-protocol
+(use-package org-roam-protocol)
+
+;;
 ;;; org-present
 ;;;
 (use-package org-present
@@ -278,7 +292,7 @@
                   (org-verbatim (:height 1.5) org-verbatim)
                   (org-block (:height 1.25) org-block)
                   (org-block-begin-line (:height 0.7) org-block)))
-    
+
     ;; register hooks with org-present
     (add-hook 'org-present-mode-hook 'jmf/org-present-start)
     (add-hook 'org-present-mode-quit-hook 'jmf/org-present-end)
@@ -312,11 +326,9 @@
     (visual-line-mode 0)))
 
 (use-package org-faces)
+
 ;; (require 'org-superstar)
 (use-package org-modern)
-
-;; If using org-roam-protocol
-(use-package org-roam-protocol)
 
 (with-eval-after-load 'outline
   (add-hook 'ediff-prepare-buffer-hook #'show-all))
@@ -324,6 +336,7 @@
 (use-package ob-mermaid
   :config
   (setq ob-mermaid-cli-path "/usr/bin/mmdc"))
+
 ;;;
 ;;; Prot's popup frames
 ;;;
@@ -363,4 +376,5 @@ Also see `prot-window-delete-popup-frame'." command)
 (prot-window-define-with-popup-frame tmr)
 
 (add-hook 'tmr-timer-created-functions #'prot-window-delete-popup-frame)
+
 (provide 'custom-org-config)

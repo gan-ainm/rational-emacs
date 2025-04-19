@@ -478,6 +478,12 @@ The new implementation should use the recommended function
     (face-remap-add-relative 'org-meta-line 'font-lock-comment-face 'fixed-pitch)
     (face-remap-add-relative 'org-checkbox 'fixed-pitch)
   )
+
+  (defun jmf/org-code-faces ()
+    (face-remap-add-relative 'org-code 'shadow 'fixed-pitch)
+    (face-remap-add-relative 'org-block
+                             :inherit 'fixed-pitch
+                             :foreground 'unspecified))
 #+end_src
 
 The next approach tries to use *use-package*'s ~:custom-font~ keyword.
@@ -651,7 +657,7 @@ Before, the definitions from [[git:~/Projects/SystemCrafters/dotfiles/Emacs.org:
 
     ;; turn on variable pitch fonts in Org Mode buffers
     (add-hook 'org-mode-hook 'variable-pitch-mode)
-    ;; (add-hook 'org-mode-hook 'jmf/org-set-faces)
+    (add-hook 'org-mode-hook 'jmf/org-code-faces)
 #+end_src
 
 Define the location of the *org* directory.
@@ -687,6 +693,11 @@ Lock parent TODO items until children are done.
   (customize-set-variable 'org-refile-targets '((org-agenda-files
                                                  :maxlevel . 6)
                                                 (nil :maxlevel . 3)))
+#+end_src
+
+Set up some custom agenda views.
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
   (customize-set-variable 'org-agenda-custom-commands
                           '(("p" "Planning"
                              ((tags-todo "+@planning"
@@ -1163,7 +1174,7 @@ Does Gnus offer configuration using *use-package*?
 
 And the ~gnus-init-file~ looks like this:
 
-#+begin_src emacs-lisp :tangle ~/.local/share/crafted-emacs/Gnus/gnus
+#+begin_src emacs-lisp :tangle no
       (setq gnus-select-method '(nntp "news.giganews.com"))
       (setq gnus-secondary-select-methods '((nnimap "imap.gmail.com"
                                                     (nnimap-user "gan.ainm.riomhphost@gmail.com")

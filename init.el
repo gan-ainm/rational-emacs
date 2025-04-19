@@ -15,6 +15,13 @@
 ;;; load the standard crafted initialization
 ;;;
 (load "~/.local/share/crafted-emacs/modules/crafted-init-config")
+;;;
+;;; Some preferred faces
+;;;
+(defvar jmf/fixed-width-font "JetBrains Mono"
+  "The font used for monospaced text.")
+(defvar jmf/variable-width-font "Iosevka Aile"
+  "The font used for document text.")
 
 ;;;
 ;;; load prepacked crafted packages
@@ -72,6 +79,8 @@
 ;; EMMS
 (add-to-list 'package-selected-packages 'emms)
 (add-to-list 'package-selected-packages 'emms-player-simple-mpv)
+;;; ledger
+(add-to-list 'package-selected-packages 'ledger-mode)
 ;;;
 ;;; install all selected packages
 ;;;
@@ -99,39 +108,72 @@
 (require 'crafted-updates-config)
 (require 'crafted-startup-config)
 
-;;;
-;;; custom configurations
-;;;
 (require 'custom-org-config)
+
 (require 'custom-ide-config)
+
+;;;
+;;; Magit
+;;;
+
 (require 'magit)
+;; handling dotfiles repo
+(setq jmf/dotfile-dirs-list
+      (mapcar
+       (lambda (d)
+                (file-name-as-directory (expand-file-name d "~/.config")))
+              '("~/"
+                "bash"
+                "chemacs"
+                "doom"
+                "Emacs_from_Scratch"
+                "git"
+                "i3"
+                "i3status"
+                "mbsync"
+                "pulse"
+                "spacemacs.d"
+                "systemd"
+                "tmux"
+                "vim"
+                "X11"
+                "yapf"
+                "zsh"
+                "~/.local/share/oh-my-zsh/custom"
+                "~/bin")))
+
+(defun jmf/magit-process-environment (env)
+  "Add GIT_DIR and GIT_WORK_TREE to ENV when in a special directory.
+https://github.com/magit/magit/issues/460 (@cpitclaudel)."
+  (let ((default (file-name-as-directory (expand-file-name default-directory))))
+    (when (member default jmf/dotfile-dirs-list)
+      (let ((gitdir (expand-file-name "~/.local/share/dotfiles/"))
+            (home (expand-file-name "~/")))
+        (push (format "GIT_WORK_TREE=%s" home) env)
+        (push (format "GIT_DIR=%s" gitdir) env))))
+  env)
+
+(advice-add 'magit-process-environment
+            :filter-return #'jmf/magit-process-environment)
 
 ;;;
 ;;; theming
 ;;;
 (use-package doom-themes
-  :init
-  (load-theme 'doom-one :no-confirm)
+  :config
+  (load-theme 'doom-one t)
 ;; (load-theme 'doom-solarized-dark t)
-  (unless crafted-startup-inhibit-splash
-    (setq initial-buffer-choice #'crafted-startup-screen)))
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+  (doom-themes-neotree-config)
+  (setq doom-themes-treemacs-theme "doom-atom")
+  (doom-themes-treemacs-config)
+  (doom-themes-org-config))
 
 ;; (require 'modus-themes)
-;; (load-theme 'modus-vivendi-tinted)
-;;(load-theme 'ef-night)
+;; (load-theme 'modus-vivendi-tinted t)
+;; (load-theme 'ef-night t)
 
-
-;; activate which-key
-(use-package which-key
-  :init
-  (which-key-mode 1))
-
-(require 'ement)
-(require 'vterm)
-
-(keymap-set evil-normal-state-map "C-," 'embark-act)
-(menu-bar-mode -1)
-(tool-bar-mode -1)
 ;;;
 ;;; activities
 ;;;
@@ -151,15 +193,6 @@
    ("C-x C-a b"   . activities-switch-buffer)
    ("C-x C-a g"   . activities-revert)
    ("C-x C-a l"   . activities-list)))
-
-;;;
-;;; epa
-;;;
-(defun jmf/lookup-password (&rest keys)
-  (let ((result (apply #'auth-source-search keys)))
-    (if result
-        (funcall (plist-get (car result) :secret))
-      nil)))
 
 ;;;
 ;;; mu4e & e-mail
@@ -260,6 +293,7 @@
           (:maildir "/GMX/Trash"     :key ?t)
           (:maildir "/GMX/Drafts"    :key ?d)
           (:maildir "/GMX/Archives"  :key ?a))))
+
 ;;;
 ;;; dired-preview
 ;;;
@@ -286,44 +320,38 @@
   ;; globally:
   ;; (dired-preview-global-mode 1)
 )
-;;;
-;;; Magit
-;;;
-
-;; handling dotfiles repo
-(setq jmf/dotfile-dirs-list
-      (mapcar
-       (lambda (d)
-                (file-name-as-directory (expand-file-name d "~/.config")))
-              '("~/"
-                "Emacs_from_Scratch"
-                "X11"
-                "chemacs"
-                "doom"
-                "i3"
-                "i3status"
-                "pulse"
-                "vim"
-                "yapf"
-                "zsh"
-                "~/.local/share/oh-my-zsh/custom"
-                "~/bin")))
-
-(defun jmf/magit-process-environment (env)
-  "Add GIT_DIR and GIT_WORK_TREE to ENV when in a special directory.
-https://github.com/magit/magit/issues/460 (@cpitclaudel)."
-  (let ((default (file-name-as-directory (expand-file-name default-directory))))
-    (when (member default jmf/dotfile-dirs-list)
-      (let ((gitdir (expand-file-name "~/.local/share/dotfiles/"))
-            (home (expand-file-name "~/")))
-        (push (format "GIT_WORK_TREE=%s" home) env)
-        (push (format "GIT_DIR=%s" gitdir) env))))
-  env)
-
-(advice-add 'magit-process-environment
-            :filter-return #'jmf/magit-process-environment)
-
-(use-package csv-mode)
 
 (use-package all-the-icons-dired
   :hook dired-mode)
+
+(use-package ledger-mode
+  :config
+  (customize-set-variable 'ledger-default-date-format ledger-iso-date-format)
+  (customize-set-variable 'ledger-init-file-name "~/.config/ledger/ledgerrc")
+  (customize-set-variable 'ledger-source-directory "~/.local/share/ledger")
+  (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
+  :mode "\\.ledger\\'")
+
+;; activate which-key
+(use-package which-key
+  :init
+  (which-key-mode 1))
+
+(require 'ement)
+(require 'vterm)
+
+(keymap-set evil-normal-state-map "C-," 'embark-act)
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+;;;
+;;; epa
+;;;
+(defun jmf/lookup-password (&rest keys)
+  (let ((result (apply #'auth-source-search keys)))
+    (if result
+        (funcall (plist-get (car result) :secret))
+      nil)))
+
+(use-package csv-mode)
+
+(customize-set-variable 'calendar-week-start-day 1)
