@@ -177,6 +177,7 @@ Some nice enhancements for org.
   (add-to-list 'package-selected-packages 'org-modern)
   (add-to-list 'package-selected-packages 'org-present)
   (add-to-list 'package-selected-packages 'org-contrib)
+  (add-to-list 'package-selected-packages 'org-transclusion)
 #+end_src
 
 And, of course, evil.
@@ -282,7 +283,6 @@ selection file.
   (add-to-list 'package-selected-packages 'emms-player-simple-mpv)
   ;;; ledger
   (add-to-list 'package-selected-packages 'ledger-mode)
-  ;;;
   ;;; install all selected packages
   ;;;
   (package-install-selected-packages :noconfirm)
@@ -917,6 +917,15 @@ Define template for ref capture.
 #+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
   ;; If using org-roam-protocol
   (use-package org-roam-protocol)
+#+end_src
+
+****** Org-Transclusion
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
+  (use-package org-transclusion
+    :after org
+    :bind (("<f12>" . org-transclusion-add)
+           ("C-c t" . org-transclusion-mode)))
 #+end_src
 
 ****** Org Present
