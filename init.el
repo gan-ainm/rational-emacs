@@ -140,7 +140,7 @@
                 "yapf"
                 "zsh"
                 "~/.local/share/oh-my-zsh/custom"
-                "~/bin")))
+                "~/.local/bin")))
 
 (defun jmf/magit-process-environment (env)
   "Add GIT_DIR and GIT_WORK_TREE to ENV when in a special directory.
