@@ -541,10 +541,14 @@ The next approach tries to use *use-package*'s ~:custom-font~ keyword.
     (face-remap-add-relative 'org-meta-line 'font-lock-comment-face 'fixed-pitch)
     (face-remap-add-relative 'org-checkbox 'fixed-pitch)
     )
+#+end_src
 
-                  ;;;
-                  ;;; org
-                  ;;;
+Here comes the Org package proper.
+
+#+begin_src emacs-lisp :tangle no
+  ;;;
+  ;;; org
+  ;;;
   (use-package org
     :config
     ;; turn on variable pitch fonts in Org Mode buffers
@@ -640,7 +644,6 @@ The next approach tries to use *use-package*'s ~:custom-font~ keyword.
            :map org-mode-map
            ("C-c L" . org-toggle-link-display)
            ("C-M-i" . completion-at-point)))
-
 #+end_src
 
 ***** Org package configuration
@@ -706,7 +709,12 @@ Set up some custom agenda views.
                               (tags-todo "-{.*}"
                                          ((org-agenda-overriding-header
                                            "Untagged Tasks")))
-                              (todo ".*"
+                              (alltodo ""
+                                    ((org-agenda-files '("~/org/inbox.org"))
+                                     (org-agenda-overriding-header
+                                      "Unprocessed Inbox Items")))))
+                            ("i" "Inbox"
+                             ((alltodo ""
                                     ((org-agenda-files '("~/org/inbox.org"))
                                      (org-agenda-overriding-header
                                       "Unprocessed Inbox Items")))))
