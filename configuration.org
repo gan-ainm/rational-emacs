@@ -71,6 +71,12 @@ The Crafted Evil collection comprises the packages
   (require 'crafted-evil-packages)
 #+end_src
 
+***** New configuration
+
+#+begin_src emacs-lisp :tangle no
+  (require 'custom-evil-packages)
+#+end_src
+
 **** IDE
 
 The Crafted IDE collection comprises the packages
@@ -148,7 +154,7 @@ custom twin in the init file.
     (require 'custom-ide-packages)
   #+end_src
 
-**** Custom Org Packages
+**** Org
 :PROPERTIES:
 :header-args: :tangle "custom-modules/custom-org-packages.el"
 :END:
@@ -205,7 +211,7 @@ The rest is from the original
   ;;; crafted-org-packages.el ends here
 #+end_src
 
-**** Custom IDE Packages
+**** IDE
 :PROPERTIES:
 :header-args: :tangle "custom-modules/custom-ide-packages.el"
 :END:
@@ -262,9 +268,14 @@ selection file.
 
 **** Other
 
+***** which-key
+
 #+begin_src emacs-lisp
   ;; dynamic completion aid for keychords
   (add-to-list 'package-selected-packages 'which-key)
+#+end_src
+
+#+begin_src emacs-lisp
   ;; the Matrix client
   (add-to-list 'package-selected-packages 'ement)
   ;; the virtual terminal
@@ -331,16 +342,109 @@ selection file.
 
 *** Custom Configuration
 
-**** Custom Org Configuration
+**** Evil
+
+Starting from the existing configuration, we'll set up a configuration based on use-package.
+
+The first two functions ~crafted-evil-vim-muscle-memory~ and ~crafted-evil-disable-arrow-keys~ were originally defined in the Crafted Evil configuration, however, they are currently not used.
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-evil-config.el
+  ;;;
+  ;;; custom-evil-config.el --- Evil mode configuration -*- lexical-binding: t; -*-
+  ;;;
+  ;;; Date: <<iso-date()>>
+
+  (defun crafted-evil-vim-muscle-memory ()
+    "Make a more familiar Vim experience.
+
+  Take some of the default keybindings for evil mode."
+    (setopt evil-want-C-i-jump t)
+    (setopt evil-want-fine-undo t))
+
+  (defun crafted-evil-discourage-arrow-keys ()
+    "Turn on a message to discourage use of arrow keys.
+
+  Rebinds the arrow keys to display a message instead."
+
+    (defun crafted-evil-discourage-arrow-keys ()
+      (message "Use HJKL keys instead!"))
+
+    ;; Disable arrow keys in normal and visual modes
+    (keymap-set evil-normal-state-map "<left>"  #'crafted-evil-discourage-arrow-keys)
+    (keymap-set evil-normal-state-map "<right>" #'crafted-evil-discourage-arrow-keys)
+    (keymap-set evil-normal-state-map "<down>"  #'crafted-evil-discourage-arrow-keys)
+    (keymap-set evil-normal-state-map "<up>"    #'crafted-evil-discourage-arrow-keys)
+    (evil-global-set-key 'motion      (kbd "<left>")  #'crafted-evil-discourage-arrow-keys)
+    (evil-global-set-key 'motion      (kbd "<right>") #'crafted-evil-discourage-arrow-keys)
+    (evil-global-set-key 'motion      (kbd "<down>")  #'crafted-evil-discourage-arrow-keys)
+    (evil-global-set-key 'motion      (kbd "<up>")    #'crafted-evil-discourage-arrow-keys))
+#+end_src
+
+The original initialization did not use *use-package* but simply ~require~'d Evil and set its user options by means of ~customize-set-variable~.
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-evil-config.el
+  (use-package evil
+    ;;; Needs to be set before loading
+    :init
+    (setopt evil-want-integration t)
+    (setopt evil-want-keybinding nil)
+    (setopt evil-respect-visual-line-mode t)
+
+    :bind
+    ;;; Make C-g revert to normal state
+    (;;; Rebind `universal-argument' to 'C-M-u' since 'C-u' now scrolls the buffer
+     ("C-M-u" . universal-argument)
+     :map evil-insert-state-map
+     ("C-g" . evil-normal-state))
+     
+    :config
+    (setopt evil-want-C-i-jump nil)
+    ;;; Make evil search more like vim
+    (evil-select-search-module 'evil-search-module 'evil-search)
+    ;;; Turn on Evil Nerd Commenter
+    (evilnc-default-hotkeys)
+
+    ;;; Use visual line motions even outside of visual-line-mode buffers
+    (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+    (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+    (evil-mode 1))
+
+  ;;; Make sure some modes start in Emacs state
+  ;; TODO: Split this out to other configuration modules?
+  (dolist (mode '(custom-mode
+                  eshell-mode
+                  term-mode))
+    (add-to-list 'evil-emacs-state-modes mode))
+
+  (use-package evil-collection
+    :after evil
+    :config
+    (evil-collection-init))
+
+  ;;;
+  ;;; evil-org
+  ;;;
+  (use-package evil-org
+    :after org
+    :hook org-mode
+    :config
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys))
+
+  (provide 'custom-evil-config)
+  ;;; crafted-evil-config.el ends here
+#+end_src
+
+**** Org
 
 #+begin_src emacs-lisp
   (require 'custom-org-config)
 #+end_src
 
 #+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
-  ;;; custom-org.el --- custom org-mode settings  -*- lexical-binding: t; -*-
+  ;;; custom-org-config.el --- custom org-mode settings  -*- lexical-binding: t; -*-
 
-  ;; Copyright (C) 2023, 2024 Gan Ainm
+  ;; Copyright (C) 2023, 2024, 2025 Gan Ainm
 
   ;; Author: Gan Ainm <gan.ainm.riomhphost@gmail.com>
   ;; Keywords: lisp, convenience
@@ -674,60 +778,60 @@ Before, the definitions from [[git:~/Projects/SystemCrafters/dotfiles/Emacs.org:
 Define the location of the *org* directory.
 
 #+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
-  (customize-set-variable 'org-directory (expand-file-name "~/org/"))
+    (customize-set-variable 'org-directory (expand-file-name "~/org/"))
 #+end_src
 
 Set to full ISO 8601 date string.
 
 #+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
-  (customize-set-variable 'org-export-date-timestamp-format "%F")
+    (customize-set-variable 'org-export-date-timestamp-format "%F")
 #+end_src
 
 Lock parent TODO items until children are done.
 
 #+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
-  (customize-set-variable 'org-enforce-todo-dependencies t)
-  (customize-set-variable 'org-log-into-drawer t)
-  (customize-set-variable 'org-outline-path-complete-in-steps nil)
-  (customize-set-variable 'org-priority-faces (quote ((65 . "red"))))
-  (customize-set-variable 'org-refile-allow-creating-parent-nodes 'confirm)
-  (customize-set-variable 'org-refile-use-outline-path (quote file))
-  (customize-set-variable 'org-src-preserve-indentation nil)
-  (customize-set-variable 'org-ellipsis " ▼")
-  (customize-set-variable 'evil-auto-indent t)
-  (customize-set-variable 'org-tags-column -77)
+    (customize-set-variable 'org-enforce-todo-dependencies t)
+    (customize-set-variable 'org-log-into-drawer t)
+    (customize-set-variable 'org-outline-path-complete-in-steps nil)
+    (customize-set-variable 'org-priority-faces (quote ((65 . "red"))))
+    (customize-set-variable 'org-refile-allow-creating-parent-nodes 'confirm)
+    (customize-set-variable 'org-refile-use-outline-path (quote file))
+    (customize-set-variable 'org-src-preserve-indentation nil)
+    (customize-set-variable 'org-ellipsis " ▼")
+    (customize-set-variable 'evil-auto-indent t)
+    (customize-set-variable 'org-tags-column -77)
 #+end_src
 ****** Agenda
 #+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
-  (customize-set-variable 'org-agenda-files
-                          (expand-file-name "agenda.files" org-directory))
-  (customize-set-variable 'org-refile-targets '((org-agenda-files
-                                                 :maxlevel . 6)
-                                                (nil :maxlevel . 3)))
+    (customize-set-variable 'org-agenda-files
+                            (expand-file-name "agenda.files" org-directory))
+    (customize-set-variable 'org-refile-targets '((org-agenda-files
+                                                   :maxlevel . 6)
+                                                  (nil :maxlevel . 3)))
 #+end_src
 
 Set up some custom agenda views.
 
 #+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
-  (customize-set-variable 'org-agenda-custom-commands
-                          '(("p" "Planning"
-                             ((tags-todo "+@planning"
-                                         ((org-agenda-overriding-header
-                                           "Planning Tasks")))
-                              (tags-todo "-{.*}"
-                                         ((org-agenda-overriding-header
-                                           "Untagged Tasks")))
-                              (alltodo ""
-                                    ((org-agenda-files '("~/org/inbox.org"))
-                                     (org-agenda-overriding-header
-                                      "Unprocessed Inbox Items")))))
-                            ("i" "Inbox"
-                             ((alltodo ""
-                                    ((org-agenda-files '("~/org/inbox.org"))
-                                     (org-agenda-overriding-header
-                                      "Unprocessed Inbox Items")))))
-                            ("d" "Daily Agenda"
-                             ((agenda "" ((org-agenda-span 'day)))))))
+    (customize-set-variable 'org-agenda-custom-commands
+                            '(("p" "Planning"
+                               ((tags-todo "+@planning"
+                                           ((org-agenda-overriding-header
+                                             "Planning Tasks")))
+                                (tags-todo "-{.*}"
+                                           ((org-agenda-overriding-header
+                                             "Untagged Tasks")))
+                                (alltodo ""
+                                         ((org-agenda-files '("~/org/inbox.org"))
+                                          (org-agenda-overriding-header
+                                           "Unprocessed Inbox Items")))))
+                              ("i" "Inbox"
+                               ((alltodo ""
+                                         ((org-agenda-files '("~/org/inbox.org"))
+                                          (org-agenda-overriding-header
+                                           "Unprocessed Inbox Items")))))
+                              ("d" "Daily Agenda"
+                               ((agenda "" ((org-agenda-span 'day)))))))
 #+end_src
 
 ****** Capture
@@ -735,46 +839,45 @@ Set up some custom agenda views.
 Org capture templates.
 
 #+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
-
   (customize-set-variable 'org-capture-templates
-                          '(("n" "Note" entry
-                             (file+headline "inbox.org" "NOTES")
-                             "* %^{Title}\n%?\n\n%a"
-                             :empty-lines 1)
+                        '(("n" "Note" entry
+                           (file+headline "inbox.org" "NOTES")
+                           "* %^{Title}\n%?\n\n%a"
+                           :empty-lines 1)
 
-                            ("j" "Journal entry templates")
-                            ("jp" "Private journal" entry
-                             (file+olp+datetree "journal.org" "JOURNAL")
-                             "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
-                             :empty-lines 1)
-                            ("jw" "Work journal" entry
-                             (file+olp+datetree "work/journal.org")
-                             "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
-                             :empty-lines 1)
+                          ("j" "Journal entry templates")
+                          ("jp" "Private journal" entry
+                           (file+olp+datetree "journal.org" "JOURNAL")
+                           "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
+                           :empty-lines 1)
+                          ("jw" "Work journal" entry
+                           (file+olp+datetree "work/journal.org")
+                           "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
+                           :empty-lines 1)
 
-                            ("t" "Todo" entry
-                             (file+headline "inbox.org" "TASKS")
-                             "* TODO %^{What?}\n%?\n\n%a"
-                             :empty-lines 1)
+                          ("t" "Todo" entry
+                           (file+headline "inbox.org" "TASKS")
+                           "* TODO %^{What?}\n%?\n\n%a"
+                           :empty-lines 1)
 
-                            ("c" "Daily todo checklist" checkitem
-                             (file+olp+datetree "daily.org")
-                             "[ ] %^{What?}\n%i\n\n%a"
-                             :empty-lines 1)
+                          ("c" "Daily todo checklist" checkitem
+                           (file+olp+datetree "daily.org")
+                           "[ ] %^{What?}\n%i\n\n%a"
+                           :empty-lines 1)
 
-                            ("b" "Book entry templates")
-                            ("bf" "Fiction" entry
-                             (file+olp "todo.org"
-                                       "Reading" "Books" "Fiction")
-                             "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
-                            ("bn" "Non-Fiction" entry
-                             (file+olp "todo.org" "Reading" "Books" "Non-Fiction")
-                             "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
+                          ("b" "Book entry templates")
+                          ("bf" "Fiction" entry
+                           (file+olp "todo.org"
+                                     "Reading" "Books" "Fiction")
+                           "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
+                          ("bn" "Non-Fiction" entry
+                           (file+olp "todo.org" "Reading" "Books" "Non-Fiction")
+                           "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
 
-                            ("x" "Web capture" entry
-                             (file+headline "inbox.org" "WEB captures")
-                             "* %:annotation\n\n%i\n%?\n%U"
-                             :empty-lines 1)))
+                          ("x" "Web capture" entry
+                           (file+headline "inbox.org" "WEB captures")
+                           "* %:annotation\n\n%i\n%?\n%U"
+                           :empty-lines 1)))
 #+end_src
 
 ****** Other variables
@@ -797,17 +900,6 @@ Org capture templates.
 
 ****** Evil
 
-#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
-  ;;;
-  ;;; evil-org
-  ;;;
-  (use-package evil-org
-    :after org
-    :hook org-mode
-    :config
-    (require 'evil-org-agenda)
-    (evil-org-agenda-set-keys))
-#+end_src
 
 ****** Org Roam
 
@@ -1081,7 +1173,255 @@ Define template for ref capture.
   (provide 'custom-org-config)
 #+end_src
 
-**** Custom IDE Configuration
+**** Completion
+
+#+begin_src emacs-lisp
+  (require 'custom-completion-config)
+#+end_src
+
+#+begin_src emacs-lisp :tangle custom-modules/custom-completion-config.el
+  ;;; custom-completion-config.el --- custom org-mode settings  -*- lexical-binding: t; -*-
+
+  ;; Copyright (C) 2023, 2024, 2025 Gan Ainm
+
+  ;; Author: Gan Ainm <gan.ainm.riomhphost@gmail.com>
+  ;; Keywords: lisp, convenience
+  ;;
+  ;; Based on the namesake crafted-completion-config.el
+  ;; Copyright (C) 2023
+  ;; SPDX-License-Identifier: MIT
+
+  ;; Author: System Crafters Community
+
+  ;;; Commentary:
+
+  ;; Setup completion packages. Completion in this sense is more like
+  ;; narrowing, allowing the user to find matches based on minimal
+  ;; inputs and "complete" the commands, variables, etc from the
+  ;; narrowed list of possible choices.
+
+  ;;; Code:
+
+  ;;; Vertico
+  (when (require 'vertico nil :noerror)
+    (require 'vertico-directory)
+    ;; Cycle back to top/bottom result when the edge is reached
+    (customize-set-variable 'vertico-cycle t)
+
+    ;; Start Vertico
+    (vertico-mode 1)
+
+    ;; Turn off the built-in fido-vertical-mode and icomplete-vertical-mode, if
+    ;; they have been turned on by crafted-defaults-config, because they interfere
+    ;; with this module.
+    (with-eval-after-load 'crafted-defaults-config
+      (fido-mode -1)
+      (fido-vertical-mode -1)
+      (icomplete-mode -1)
+      (icomplete-vertical-mode -1)))
+
+  
+  ;;; Marginalia
+  (when (require 'marginalia nil :noerror)
+    ;; Configure Marginalia
+    (customize-set-variable 'marginalia-annotators
+                            '(marginalia-annotators-heavy
+                              marginalia-annotators-light
+                              nil))
+    (marginalia-mode 1))
+
+  
+  ;;; Consult
+  ;; Since Consult doesn't need to be required, we assume the user wants these
+  ;; setting if it is installed (regardless of the installation method).
+  ;;
+  ;; We are starting with the standard setup from Consult's info file
+  ;; Example configuration for Consult
+  (use-package consult
+    ;; Replace bindings. Lazily loaded by `use-package'.
+    :bind (;; C-c bindings in `mode-specific-map'
+           ("C-c M-x" . consult-mode-command)
+           ("C-c h" . consult-history)
+           ("C-c k" . consult-kmacro)
+           ("C-c m" . consult-man)
+           ("C-c i" . consult-info)
+           ([remap Info-search] . consult-info)
+           ;; C-x bindings in `ctl-x-map'
+           ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+           ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+           ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+           ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+           ("C-x t b" . consult-buffer-other-tab)    ;; orig. switch-to-buffer-other-tab
+           ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
+           ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+           ;; Custom M-# bindings for fast register access
+           ("M-#" . consult-register-load)
+           ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+           ("C-M-#" . consult-register)
+           ;; Other custom bindings
+           ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+           ;; M-g bindings in `goto-map'
+           ("M-g e" . consult-compile-error)
+           ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
+           ("M-g g" . consult-goto-line)             ;; orig. goto-line
+           ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+           ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+           ("M-g m" . consult-mark)
+           ("M-g k" . consult-global-mark)
+           ("M-g i" . consult-imenu)
+           ("M-g I" . consult-imenu-multi)
+           ;; M-s bindings in `search-map'
+           ("M-s d" . consult-find)                  ;; Alternative: consult-fd
+           ("M-s c" . consult-locate)
+           ("M-s g" . consult-grep)
+           ("M-s G" . consult-git-grep)
+           ("M-s r" . consult-ripgrep)
+           ("M-s l" . consult-line)
+           ("M-s L" . consult-line-multi)
+           ("M-s k" . consult-keep-lines)
+           ("M-s u" . consult-focus-lines)
+           ;; Isearch integration
+           ("M-s e" . consult-isearch-history)
+           :map isearch-mode-map
+           ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
+           ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
+           ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+           ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
+           ;; Minibuffer history
+           :map minibuffer-local-map
+           ("M-s" . consult-history)                 ;; orig. next-matching-history-element
+           ("M-r" . consult-history))                ;; orig. previous-matching-history-element
+
+    ;; Enable automatic preview at point in the *Completions* buffer. This is
+    ;; relevant when you use the default completion UI.
+    :hook (completion-list-mode . consult-preview-at-point-mode)
+
+    ;; The :init configuration is always executed (Not lazy)
+    :init
+
+    ;; Tweak the register preview for `consult-register-load',
+    ;; `consult-register-store' and the built-in commands.  This improves the
+    ;; register formatting, adds thin separator lines, register sorting and hides
+    ;; the window mode line.
+    (advice-add #'register-preview :override #'consult-register-window)
+    (setq register-preview-delay 0.5)
+
+    ;; Use Consult to select xref locations with preview
+    (setq xref-show-xrefs-function #'consult-xref
+          xref-show-definitions-function #'consult-xref)
+
+    ;; Configure other variables and modes in the :config section,
+    ;; after lazily loading the package.
+    :config
+
+    ;; Optionally configure preview. The default value
+    ;; is 'any, such that any key triggers the preview.
+    ;; (setq consult-preview-key 'any)
+    ;; (setq consult-preview-key "M-.")
+    ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
+    ;; For some commands and buffer sources it is useful to configure the
+    ;; :preview-key on a per-command basis using the `consult-customize' macro.
+    (consult-customize
+     consult-theme :preview-key '(:debounce 0.2 any)
+     consult-ripgrep consult-git-grep consult-grep consult-man
+     consult-bookmark consult-recent-file consult-xref
+     consult--source-bookmark consult--source-file-register
+     consult--source-recent-file consult--source-project-recent-file
+     ;; :preview-key "M-."
+     :preview-key '(:debounce 0.4 any))
+
+    ;; Optionally configure the narrowing key.
+    ;; Both < and C-+ work reasonably well.
+    (setq consult-narrow-key "<") ;; "C-+"
+
+    ;; Optionally make narrowing help available in the minibuffer.
+    ;; You may want to use `embark-prefix-help-command' or which-key instead.
+    ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help))
+    )
+
+  ;; (when (locate-library "consult")
+  ;;   ;; Set some consult bindings
+  ;;   (keymap-global-set "C-s" 'consult-line)
+  ;;   (keymap-set minibuffer-local-map "C-r" 'consult-history)
+  ;;
+  ;;   (setq completion-in-region-function #'consult-completion-in-region)
+
+  
+  ;;; Orderless
+  (when (require 'orderless nil :noerror)
+    ;; Set up Orderless for better fuzzy matching
+    (customize-set-variable 'completion-styles '(orderless basic))
+    (customize-set-variable 'completion-category-overrides
+                            '((file (styles . (partial-completion))))))
+
+  
+  ;;; Embark
+  (when (require 'embark nil :noerror)
+
+    (keymap-global-set "<remap> <describe-bindings>" #'embark-bindings)
+    (keymap-global-set "C-." 'embark-act)
+
+    ;; Use Embark to show bindings in a key prefix with `C-h`
+    (setq prefix-help-command #'embark-prefix-help-command)
+
+    (when (require 'embark-consult nil :noerror)
+      (with-eval-after-load 'embark-consult
+        (add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode))))
+
+  
+  ;;; Corfu
+  (when (require 'corfu nil :noerror)
+
+    (unless (display-graphic-p)
+      (when (require 'corfu-terminal nil :noerror)
+        (corfu-terminal-mode +1)))
+
+    ;; Setup corfu for popup like completion
+    (customize-set-variable 'corfu-cycle t)        ; Allows cycling through candidates
+    (customize-set-variable 'corfu-auto t)         ; Enable auto completion
+    (customize-set-variable 'corfu-auto-prefix 2)  ; Complete with less prefix keys
+
+    (global-corfu-mode 1)
+    (when (require 'corfu-popupinfo nil :noerror)
+
+      (corfu-popupinfo-mode 1)
+      (eldoc-add-command #'corfu-insert)
+      (keymap-set corfu-map "M-p" #'corfu-popupinfo-scroll-down)
+      (keymap-set corfu-map "M-n" #'corfu-popupinfo-scroll-up)
+      (keymap-set corfu-map "M-d" #'corfu-popupinfo-toggle)))
+
+  
+  ;;; Cape
+
+  (when (require 'cape nil :noerror)
+    ;; Setup Cape for better completion-at-point support and more
+
+    ;; Add useful defaults completion sources from cape
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+
+    ;; Silence the pcomplete capf, no errors or messages!
+    ;; Important for corfu
+    (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+
+    ;; Ensure that pcomplete does not write to the buffer
+    ;; and behaves as a pure `completion-at-point-function'.
+    (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
+
+    ;; No auto-completion or completion-on-quit in eshell
+    (defun crafted-completion-corfu-eshell ()
+      "Special settings for when using corfu with eshell."
+      (setq-local corfu-quit-at-boundary t
+                  corfu-quit-no-match t
+                  corfu-auto nil)
+      (corfu-mode))
+    (add-hook 'eshell-mode-hook #'crafted-completion-corfu-eshell))
+
+  (provide 'custom-completion-config)
+  ;;; crafted-completion.el ends here
+
+#+end_src
+**** IDE
 
 #+begin_src emacs-lisp
   (require 'custom-ide-config)
