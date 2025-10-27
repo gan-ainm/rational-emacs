@@ -1,13 +1,21 @@
 #+STARTUP: content indent
 #+PROPERTY: header-args :tangle "init.el"
 
+#+NAME: iso-date
+#+begin_src elisp :tangle no
+  (format-time-string "%F")
+#+end_src
 * Crafted Emacs Initialization
 
 ** Toggles for Debugging
 
 If something goes wrong, quickly uncomment the prepared debug settings.
 
-#+begin_src emacs-lisp
+The date is inserted from the [[iso-date]] function above when being tangled.
+
+#+begin_src emacs-lisp :noweb yes
+  ;;;
+  ;;; <<iso-date()>>
   ;;; debug toggles (by uncommenting)
 
   ;; (setq debug-on-quit t)
