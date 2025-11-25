@@ -194,6 +194,13 @@ Some nice enhancements for org.
   (add-to-list 'package-selected-packages 'org-transclusion)
 #+end_src
 
+Annotating PDF documents using PDF-View.
+
+#+begin_src emacs-lisp
+  (add-to-list 'package-selected-packages 'org-pdftools)
+  (add-to-list 'package-selected-packages 'org-noter)
+  (add-to-list 'package-selected-packages 'org-noter-pdftools)
+#+end_src
 And, of course, evil.
 
 #+begin_src emacs-lisp
@@ -592,6 +599,7 @@ The new implementation should use the recommended function
   )
 
   (defun jmf/org-code-faces ()
+    (face-remap-add-relative 'org-table 'fixed-pitch)
     (face-remap-add-relative 'org-code 'shadow 'fixed-pitch)
     (face-remap-add-relative 'org-block
                              :inherit 'fixed-pitch
