@@ -275,26 +275,95 @@ selection file.
 
 **** Other
 
-***** which-key
+***** which-key - Display available keybindings in popup
+
+The `which-key' mode displays the key bindings following your
+currently entered incomplete command (a prefix) in a popup.  For
+example, after enabling the minor mode if you enter C-x and wait for
+the default of 1 second the minibuffer will expand with all of the
+available key bindings that follow C-x (or as many as space allows
+given your settings).
+
+This includes prefixes like C-x 8 which are shown in a different
+face.
 
 #+begin_src emacs-lisp
   ;; dynamic completion aid for keychords
   (add-to-list 'package-selected-packages 'which-key)
 #+end_src
 
+***** ement - Matrix client
+
+Ement.el is a Matrix client for Emacs.  It aims to be simple, fast,
+featureful, and reliable.
+
 #+begin_src emacs-lisp
   ;; the Matrix client
   (add-to-list 'package-selected-packages 'ement)
+#+end_src
+
+***** vterm - Fully-featured terminal emulator
+
+Emacs-libvterm (*vterm*) is fully-fledged terminal emulator based on an
+external library (libvterm) loaded as a dynamic module.  As a result
+of using compiled code (instead of elisp), emacs-libvterm is fully
+capable, fast, and it can seamlessly handle large outputs.
+
+#+begin_src emacs-lisp
   ;; the virtual terminal
   (add-to-list 'package-selected-packages 'vterm)
+#+end_src
+
+***** bufler - Group buffers into workspaces with programmable rules
+
+Bufler is like a butler for your buffers, presenting them to you in
+an organized way based on your instructions.  The instructions are
+written as grouping rules in a simple language, allowing you to
+customize the way buffers are grouped.  The default rules are
+designed to be generally useful, so you don't have to write your
+own.
+
+#+begin_src emacs-lisp
   ;; the butler for buffers
   (add-to-list 'package-selected-packages 'bufler)
+#+end_src
+
+***** pdf-tools - Support library for PDF documents
+
+PDF Tools is, among other things, a replacement of DocView for PDF
+files. The key difference is that pages are not pre-rendered by, say,
+`ghostscript' and stored in the file-system, but rather created
+on-demand and stored in memory.
+
+#+begin_src emacs-lisp
   ;; using PDFs with emacs
   (add-to-list 'package-selected-packages 'pdf-tools)
+#+end_src
+
+***** restclient - An interactive HTTP client for Emacs
+
+This is a tool to manually explore and test HTTP REST
+webservices.  Runs queries from a plain-text query sheet, displays
+results as a pretty-printed XML, JSON and even images.
+
+#+begin_src emacs-lisp
   ;; restclient
   (add-to-list 'package-selected-packages 'restclient)
   (add-to-list 'package-selected-packages 'restclient-jq)
   (add-to-list 'package-selected-packages 'ob-restclient)
+#+end_src
+
+***** activities - Save/restore sets of windows, tabs/frames, and their buffers
+
+Inspired by Genera's and KDE's concepts of "activities", this Emacs
+library allows the user to manage frames/tabs, windows, and buffers
+according to their purpose.  An "activity" comprises a frame or tab, its
+window configuration, and the buffers displayed in them–its "state";
+this state would be related to a certain task the user performs at
+various times, such as developing a certain software project, reading
+and writing email, working with one's Org mode system, etc.
+
+#+begin_src emacs-lisp
   ;; activities
   (add-to-list 'package-selected-packages 'activities)
   ;; dired additions
@@ -309,6 +378,67 @@ selection file.
   (add-to-list 'package-selected-packages 'emms-player-simple-mpv)
   ;;; ledger
   (add-to-list 'package-selected-packages 'ledger-mode)
+  ;;; Yet another snippet extension for Emacs
+  (add-to-list 'package-selected-packages 'yasnippet)
+  ;;; Collection of yasnippet snippets
+  (add-to-list 'package-selected-packages 'yasnippet-snippets)
+#+end_src
+
+***** gptel
+
+*gptel* is a simple Large Language Model chat client for Emacs, with
+support for multiple models and backends.  It works in the spirit of
+Emacs, available at any time and uniformly in any buffer.
+
+#+begin_src emacs-lisp
+  ;;; gptel
+  (add-to-list 'package-selected-packages 'gptel)
+#+end_src
+
+***** [[https://github.com/skeeto/elfeed][elfeed]]
+
+*elfeed* is a web feed client for Emacs, inspired by notmuch. See
+the README for full documentation.
+
+****** Base
+
+#+begin_src emacs-lisp
+  ;;; elfeed
+  (add-to-list 'package-selected-packages 'elfeed)
+#+end_src
+
+****** [[https://github.com/remyhonig/elfeed-org][elfeed-org]]
+
+Maintaining tags for all rss feeds is cumbersome using the regular
+flat list where there is no hierarchy and tag names are duplicated a
+lot.  Org-mode makes the book keeping of tags and feeds much easier.
+Tags get inherited from parent headlines.  Multiple files can be
+specified to separate your private from your work feeds for example.
+You may also use tagging rules to tag feeds by entry-title keywords.
+See https://github.com/remyhonig/elfeed-org for usage.
+
+#+begin_src emacs-lisp
+  ;;; elfeed
+  (add-to-list 'package-selected-packages 'elfeed-org)
+#+end_src
+
+****** [[https://github.com/sp1ff/elfeed-score][elfeed-score]]
+
+*elfeed-score* is an add-on for *elfeed*, an RSS reader for
+Emacs.  It brings Gnus-style scoring to your RSS feeds.  Elfeed, by
+default, displays feed entries by date.  This package allows you to
+setup rules for assigning numeric scores to entries, and sorting
+entries with higher scores ahead of those with lower, regardless of
+date.  The idea is to prioritize content important to you.
+
+#+begin_src emacs-lisp
+  ;;; elfeed-score
+  (add-to-list 'package-selected-packages 'elfeed-score)
+#+end_src
+
+**** Installation
+
+#+begin_src emacs-lisp
   ;;; install all selected packages
   ;;;
   (package-install-selected-packages :noconfirm)
@@ -324,9 +454,14 @@ selection file.
 
   (add-to-list 'package-vc-selected-packages
                '(org-timeblock :url "https://github.com/ichernyshovvv/org-timeblock/"))
+#+end_src
 
+**** Installation
+
+After adding all requested packages to the list, install them.
+
+#+begin_src emacs-lisp
   (package-vc-install-selected-packages)
-
 #+end_src
 
 ** Package Configuration
@@ -772,142 +907,108 @@ Currently Org mode uses the faces defined in *doom-themes-org-config*.
 Before, the definitions from [[git:~/Projects/SystemCrafters/dotfiles/Emacs.org::master@{2025-04-06}::299][System Crafters]] were defined in section [[Faces]].
 
 #+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
-  ;;;
-  ;;; org
-  ;;;
+  ;;; org mode setup
+
   (use-package org
+
     :config
 
     ;; turn on variable pitch fonts in Org Mode buffers
     (add-hook 'org-mode-hook 'variable-pitch-mode)
     (add-hook 'org-mode-hook 'jmf/org-code-faces)
+
+    (setopt
+     ;; Define the location of the *org* directory.
+     org-directory (expand-file-name "~/org/")
+     ;; Set to full ISO 8601 date string.
+     org-export-date-timestamp-format "%F"
+     ;; Lock parent TODO items until children are done.
+     org-enforce-todo-dependencies t
+     org-log-into-drawer t
+     org-outline-path-complete-in-steps nil
+     org-priority-faces '((65 . "red"))
+     org-refile-allow-creating-parent-nodes 'confirm
+     org-refile-use-outline-path 'file
+     org-src-preserve-indentation nil
+     org-ellipsis " ▼"
+     evil-auto-indent t
+     org-tags-column -77
+     ;; agenda
+     ;; the agenda file list
+     org-agenda-files (expand-file-name
+                       "agenda.files" org-directory)
+     ;; refile targets
+     org-refile-targets '((org-agenda-files :maxlevel . 6)
+                          (nil :maxlevel . 3))
+     ;; some custom agenda views.
+     org-agenda-custom-commands '(("p" "Planning"
+                                   ((tags-todo "+@planning"
+                                               ((org-agenda-overriding-header
+                                                 "Planning Tasks")))
+                                    (tags-todo "-{.*}"
+                                               ((org-agenda-overriding-header
+                                                 "Untagged Tasks")))
+                                    (alltodo ""
+                                             ((org-agenda-files '("~/org/inbox.org"))
+                                              (org-agenda-overriding-header
+                                               "Unprocessed Inbox Items")))))
+                                  ("i" "Inbox"
+                                   ((alltodo ""
+                                             ((org-agenda-files '("~/org/inbox.org"))
+                                              (org-agenda-overriding-header
+                                               "Unprocessed Inbox Items")))))
+                                  ("d" "Daily Agenda"
+                                   ((agenda "" ((org-agenda-span 'day))))))
+     ;; Org capture templates.
+     org-capture-templates '(("n" "Note" entry
+                              (file+headline "inbox.org" "NOTES")
+                              "* %^{Title}\n%?\n\n%a"
+                              :empty-lines 1)
+
+                             ("j" "Journal entry templates")
+                             ("jp" "Private journal" entry
+                              (file+olp+datetree "journal.org" "JOURNAL")
+                              "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
+                              :empty-lines 1)
+                             ("jw" "Work journal" entry
+                              (file+olp+datetree "work/journal.org")
+                              "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
+                              :empty-lines 1)
+
+                             ("t" "Todo" entry
+                              (file+headline "inbox.org" "TASKS")
+                              "* TODO %^{What?}\n%?\n\n%a"
+                              :empty-lines 1)
+
+                             ("c" "Daily todo checklist" checkitem
+                              (file+olp+datetree "daily.org")
+                              "[ ] %^{What?}\n%i\n\n%a"
+                              :empty-lines 1)
+
+                             ("b" "Book entry templates")
+                             ("bf" "Fiction" entry
+                              (file+olp "todo.org"
+                                        "Reading" "Books" "Fiction")
+                              "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
+                             ("bn" "Non-Fiction" entry
+                              (file+olp "todo.org" "Reading" "Books" "Non-Fiction")
+                              "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
+
+                             ("x" "Web capture" entry
+                              (file+headline "inbox.org" "WEB captures")
+                              "* %:annotation\n\n%i\n%?\n%U"
+                              :empty-lines 1)))
+    ;; for centered text using visual fill column mode
+    (setq visual-fill-column-width 110
+          visual-fill-column-center-text t)
+
+    :bind (("C-c a" . org-agenda)
+           ("C-c x" . org-capture)
+           ("C-c l" . org-store-link)
+           :map org-mode-map
+           ("C-c L" . org-toggle-link-display)
+           ("C-M-i" . completion-at-point)))
 #+end_src
-
-Define the location of the *org* directory.
-
-#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
-    (customize-set-variable 'org-directory (expand-file-name "~/org/"))
-#+end_src
-
-Set to full ISO 8601 date string.
-
-#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
-    (customize-set-variable 'org-export-date-timestamp-format "%F")
-#+end_src
-
-Lock parent TODO items until children are done.
-
-#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
-    (customize-set-variable 'org-enforce-todo-dependencies t)
-    (customize-set-variable 'org-log-into-drawer t)
-    (customize-set-variable 'org-outline-path-complete-in-steps nil)
-    (customize-set-variable 'org-priority-faces (quote ((65 . "red"))))
-    (customize-set-variable 'org-refile-allow-creating-parent-nodes 'confirm)
-    (customize-set-variable 'org-refile-use-outline-path (quote file))
-    (customize-set-variable 'org-src-preserve-indentation nil)
-    (customize-set-variable 'org-ellipsis " ▼")
-    (customize-set-variable 'evil-auto-indent t)
-    (customize-set-variable 'org-tags-column -77)
-#+end_src
-****** Agenda
-#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
-    (customize-set-variable 'org-agenda-files
-                            (expand-file-name "agenda.files" org-directory))
-    (customize-set-variable 'org-refile-targets '((org-agenda-files
-                                                   :maxlevel . 6)
-                                                  (nil :maxlevel . 3)))
-#+end_src
-
-Set up some custom agenda views.
-
-#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
-    (customize-set-variable 'org-agenda-custom-commands
-                            '(("p" "Planning"
-                               ((tags-todo "+@planning"
-                                           ((org-agenda-overriding-header
-                                             "Planning Tasks")))
-                                (tags-todo "-{.*}"
-                                           ((org-agenda-overriding-header
-                                             "Untagged Tasks")))
-                                (alltodo ""
-                                         ((org-agenda-files '("~/org/inbox.org"))
-                                          (org-agenda-overriding-header
-                                           "Unprocessed Inbox Items")))))
-                              ("i" "Inbox"
-                               ((alltodo ""
-                                         ((org-agenda-files '("~/org/inbox.org"))
-                                          (org-agenda-overriding-header
-                                           "Unprocessed Inbox Items")))))
-                              ("d" "Daily Agenda"
-                               ((agenda "" ((org-agenda-span 'day)))))))
-#+end_src
-
-****** Capture
-
-Org capture templates.
-
-#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
-  (customize-set-variable 'org-capture-templates
-                        '(("n" "Note" entry
-                           (file+headline "inbox.org" "NOTES")
-                           "* %^{Title}\n%?\n\n%a"
-                           :empty-lines 1)
-
-                          ("j" "Journal entry templates")
-                          ("jp" "Private journal" entry
-                           (file+olp+datetree "journal.org" "JOURNAL")
-                           "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
-                           :empty-lines 1)
-                          ("jw" "Work journal" entry
-                           (file+olp+datetree "work/journal.org")
-                           "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
-                           :empty-lines 1)
-
-                          ("t" "Todo" entry
-                           (file+headline "inbox.org" "TASKS")
-                           "* TODO %^{What?}\n%?\n\n%a"
-                           :empty-lines 1)
-
-                          ("c" "Daily todo checklist" checkitem
-                           (file+olp+datetree "daily.org")
-                           "[ ] %^{What?}\n%i\n\n%a"
-                           :empty-lines 1)
-
-                          ("b" "Book entry templates")
-                          ("bf" "Fiction" entry
-                           (file+olp "todo.org"
-                                     "Reading" "Books" "Fiction")
-                           "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
-                          ("bn" "Non-Fiction" entry
-                           (file+olp "todo.org" "Reading" "Books" "Non-Fiction")
-                           "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
-
-                          ("x" "Web capture" entry
-                           (file+headline "inbox.org" "WEB captures")
-                           "* %:annotation\n\n%i\n%?\n%U"
-                           :empty-lines 1)))
-#+end_src
-
-****** Other variables
-
-#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
-  (setq visual-fill-column-width 110
-        visual-fill-column-center-text t)
-#+end_src
-
-****** Bindings
-
-#+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
-  :bind (("C-c a" . org-agenda)
-         ("C-c x" . org-capture)
-         ("C-c l" . org-store-link)
-         :map org-mode-map
-         ("C-c L" . org-toggle-link-display)
-         ("C-M-i" . completion-at-point)))
-#+end_src
-
-****** Evil
-
 
 ****** Org Roam
 
@@ -1120,7 +1221,7 @@ Define template for ref capture.
 
 #+begin_src emacs-lisp :tangle custom-modules/custom-org-config.el
   (with-eval-after-load 'outline
-    (add-hook 'ediff-prepare-buffer-hook #'show-all))
+    (add-hook 'ediff-prepare-buffer-hook #'outline-show-all))
 #+end_src
 
 ****** Mermaid diagrams
@@ -1555,6 +1656,7 @@ And the ~gnus-init-file~ looks like this:
 #+end_src
 
 ***** E-Mail
+
 The current configuration is using *mbsync* and *mu4e*.
 
 #+begin_src emacs-lisp
@@ -1659,7 +1761,40 @@ The current configuration is using *mbsync* and *mu4e*.
             (:maildir "/GMX/Archives"  :key ?a))))
 #+end_src
 
-**** Dired
+***** Feed Reader
+
+This is the *elfeed* configuration.
+
+#+begin_src emacs-lisp
+    (use-package elfeed
+      :defer t
+      :config
+      (setq elfeed-feeds
+            '(
+              ("https://www.heise.de/security/feed.xml" heise security)
+              ("https://www.heise.de/developer/feed.xml" heise developer)
+              ("https://kiupdate.podigee.io/feed/mp3.rss" heise ki podcast)
+              ("https://sachachua.com/blog/feed/index.xml" emacs sacha)
+              ("https://planet.emacslife.com/atom.xml" emacs emacslife)
+              ))
+
+      (defface heise-elfeed-entry
+        '((t :background "blue"))
+        "Marks a Heise entry")
+      (push '(heise heise-elfeed-entry)
+            elfeed-search-face-alist)
+
+      (defface emacs-elfeed-entry
+        '((t :background "dark violet"))
+        "Marks an Emacs entry")
+
+      (push '(emacs emacs-elfeed-entry)
+            elfeed-search-face-alist)
+    ;; (use-package elfeed-org)
+    ;; (use-package elfeed-score)
+    )
+#+end_src
+Dired
 
 #+begin_src emacs-lisp
   ;;;
@@ -1716,8 +1851,8 @@ The configuration and data of *ledger* should be in the usual places.
     :init
     (which-key-mode 1))
 
-  (require 'ement)
-  (require 'vterm)
+  (use-package ement)
+  (use-package vterm)
 
   (keymap-set evil-normal-state-map "C-," 'embark-act)
   (menu-bar-mode -1)
@@ -1732,6 +1867,216 @@ The configuration and data of *ledger* should be in the usual places.
         nil)))
 
   (use-package csv-mode)
+  ;;;
+  ;;; use pdf-tools instead of DocView
+  ;;;
+  (pdf-tools-install)
+#+end_src
 
-  (customize-set-variable 'calendar-week-start-day 1)
+The *ob-m4* file has been salvaged from a [[https://mail.gnu.org/archive/html/emacs-orgmode/2018-04/msg00038.html][GNU mailing list posting]].
+
+#+begin_src emacs-lisp :tangle modules/ob-m4.el
+  ;;; ob-m4.el --- Babel Functions for m4 scripts    -*- lexical-binding: t; -*-
+
+  ;; Copyright (C) 2015-2018 Free Software Foundation, Inc.
+
+  ;; Author: Brad Knotwell
+  ;; Keywords: literate programming, reproducible research
+  ;; Version: 0.1.0
+
+  ;; This file is part of GNU Emacs.
+
+  ;; GNU Emacs is free software: you can redistribute it and/or modify
+  ;; it under the terms of the GNU General Public License as published by
+  ;; the Free Software Foundation, either version 3 of the License, or
+  ;; (at your option) any later version.
+
+  ;; GNU Emacs is distributed in the hope that it will be useful,
+  ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ;; GNU General Public License for more details.
+
+  ;; You should have received a copy of the GNU General Public License
+  ;; along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.
+
+  ;;; Commentary:
+
+  ;; Provides a way to evaluate m4 scripts in Org mode.
+
+  ;;; Usage:
+
+  ;; Add to your Emacs config:
+
+  ;; (org-babel-do-load-languages
+  ;;  'org-babel-load-languages
+  ;;  '((m4 . t)))
+
+  ;; In addition to the normal header arguments, ob-m4 also provides
+  ;; two specific options:
+  ;;  :cmd-line -- allows a user to append arguments to the call
+  ;;  :prefix-buildins -- calls with the -P option to automatically
+  ;;       prefix all built-in macros with 'm4_'
+  ;; Note:  it is a bad idea to explicitly pass the "-P" option in
+  ;; :cmd-line to enable prefixing as any arguments specified via
+  ;; :var NAME=value will be prefixed incorrectly.
+  ;;
+  ;; Explaining this with a bit more detail, all :var NAME=value arguments are
+  ;; prepended to the body as definitions:
+  ;;     define(NAME,value)
+  ;;            or
+  ;;     m4_define(NAME,value) iff :prefix-builtins is set
+  ;;
+  ;; Note:  the :prefix-builtin option is incompatible with Posix
+  ;;        compliant m4 implementations.  This is fine for two reasons:
+  ;;     * anyone using a Posix compliant utility is fine by default as
+  ;;       the -P option is omitted
+  ;;     * GNU's m4 implementation is (essentially) standard at this point
+  (require 'ob)
+
+  (defvar org-babel-m4-command "m4"
+    "Name of the m4 executable command.")
+
+  (defvar org-babel-tangle-lang-exts)
+  (add-to-list 'org-babel-tangle-lang-exts '("m4" . "m4"))
+
+  (defconst org-babel-header-args:m4
+    '((:cmd-line . :any)
+      (:prefix-builtins))
+    "M4 specific header arguments.")
+
+  (defvar org-babel-default-header-args:m4 '()
+    "Default arguments for evaluating a m4 source block.")
+
+  ;; build the passed-in macro definitions as a single string to prepend to the body
+  ;; the hocus-pocus with :prefix-builtins is necessary for the -P option to work
+
+  (defun __org-babel-m4-prefix (params) (if (assq :prefix-builtins params) "m4_"))
+  (defun org-babel--variable-assignment:m4_generic (params varname values)
+    (concat (__org-babel-m4-prefix params)
+  	  "define(" (format "%s" varname) "," (format "%s" values) ")"
+  	  (__org-babel-m4-prefix params)
+  	  "dnl\n"))
+
+  (defun org-babel--variable-assignment:m4_list (params varname values)
+    (concat (__org-babel-m4-prefix params)
+  	  "define(" (format "%s,[" varname)
+  	  (mapconcat (lambda (value)
+  		       (if (= (length value) 1) (format "%s" (car value))
+  		       (concat "["
+  			       (mapconcat (lambda (x) (format "%s" x)) value ",")
+  			       "]"))) values ",")
+  	  "])" (__org-babel-m4-prefix params) "dnl\n"))
+
+  (defun org-babel--variable-assignments:m4 (params varnames values)
+    "Represent the parameters as m4 definitions"
+    (pcase values
+      (`(,_ . ,_) (org-babel--variable-assignment:m4_list params varnames values))
+      (_ (org-babel--variable-assignment:m4_generic params varnames values))))
+
+  (defun org-babel-variable-assignments:m4 (params)
+    (apply 'concat (mapcar (lambda (pair) (org-babel--variable-assignments:m4
+  					 params (car pair) (cdr pair)))
+  			 (org-babel--get-vars params))))
+
+  ;; required to make tangling work
+  ;; the final "\n" is required to make m4 work as the body doesn't end in a newline
+  (defun org-babel-expand-body:m4 (body params)
+    "Expand BODY according to PARAMS, return the expanded body."
+    (concat (org-babel-variable-assignments:m4 params) body "\n"))
+
+  (defun org-babel-execute:m4 (body params)
+    "Execute a block of m4 code with Org Babel.
+  BODY is the source inside a m4 source block and PARAMS is an
+  association list over the source block configurations.  This
+  function is called by `org-babel-execute-src-block'."
+    (message "executing m4 source code block")
+    (let* ((result-params (cdr (assq :result-params params)))
+           (cmd-line (cdr (assq :cmd-line params)))
+  	 (prefix-builtins (assq :prefix-builtins params))
+  	 (code-file (let ((file (org-babel-temp-file "m4-")))
+                        (with-temp-file file
+  			(insert (org-babel-expand-body:m4 body params) file)) file))
+  	 (stdin (let ((stdin (cdr (assq :stdin params))))
+  		   (when stdin
+  		     (let ((tmp (org-babel-temp-file "m4-stdin-"))
+  			   (res (org-babel-ref-resolve stdin)))
+  		       (with-temp-file tmp
+  			 (insert res))
+  		       tmp))))
+           (cmd (mapconcat #'identity
+  			 (remq nil
+  			       (list org-babel-m4-command
+  				     cmd-line (if prefix-builtins "-P") "<" code-file))
+  			 " ")))
+      (org-babel-reassemble-table
+       (let ((results
+              (cond
+               (stdin (with-temp-buffer
+                        (call-process-shell-command cmd stdin (current-buffer))
+                        (buffer-string)))
+               (t (org-babel-eval cmd "")))))
+         (when results
+           (org-babel-result-cond result-params
+  	   results
+  	   (let ((tmp (org-babel-temp-file "m4-results-")))
+  	     (with-temp-file tmp (insert results))
+  	     (org-babel-import-elisp-from-file tmp)))))
+       (org-babel-pick-name
+        (cdr (assq :colname-names params)) (cdr (assq :colnames params)))
+       (org-babel-pick-name
+        (cdr (assq :rowname-names params)) (cdr (assq :rownames params))))))
+
+  (provide 'ob-m4)
+  ;;; ob-m4.el ends here
+
+  ;; Test examples below:
+  ;;
+  ;;
+  ;; #+begin_src m4 :results output :var XXXX='hello' :var YYYY='world'
+  ;; define(this1, one will expand)dnl
+  ;; m4_define(this2,one will not expand)m4_dnl
+  ;; this1
+  ;; this2
+  ;; XXXX
+  ;; YYYY
+  ;; ZZZZ
+  ;; #+end_src
+
+  ;; #+RESULTS:
+  ;; : m4_define(this2,one will not expand)m4_dnl
+  ;; : one will expand
+  ;; : this2
+  ;; : hello
+  ;; : world
+  ;; : ZZZZ
+
+  ;; #+begin_src m4 :prefix-builtins :results output :var XXXX='hello' :var YYYY='world'
+  ;; define(this1, one will not expand)dnl
+  ;; m4_define(this2,one will expand)m4_dnl
+  ;; this1
+  ;; this2
+  ;; XXXX
+  ;; YYYY
+  ;; ZZZZ
+  ;; #+end_src
+
+  ;; #+RESULTS:
+  ;; : define(this1, one will not expand)dnl
+  ;; : this1
+  ;; : one will expand
+  ;; : hello
+  ;; : world
+  ;; : ZZZZ
+
+#+end_src
+
+#+begin_src emacs-lisp
+  ;;;
+  ;;; m4 for Babel
+  ;;;
+  (use-package ob-m4
+    :config
+    (add-to-list 'org-babel-load-languages '(m4 . t)))
+
+  (setopt calendar-week-start-day 1)
 #+end_src

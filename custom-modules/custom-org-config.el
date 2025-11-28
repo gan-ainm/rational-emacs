@@ -1,6 +1,6 @@
-;;; custom-org.el --- custom org-mode settings  -*- lexical-binding: t; -*-
+;;; custom-org-config.el --- custom org-mode settings  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2023, 2024 Gan Ainm
+;; Copyright (C) 2023, 2024, 2025 Gan Ainm
 
 ;; Author: Gan Ainm <gan.ainm.riomhphost@gmail.com>
 ;; Keywords: lisp, convenience
@@ -65,121 +65,113 @@
 )
 
 (defun jmf/org-code-faces ()
+  (face-remap-add-relative 'org-table 'fixed-pitch)
   (face-remap-add-relative 'org-code 'shadow 'fixed-pitch)
   (face-remap-add-relative 'org-block
                            :inherit 'fixed-pitch
                            :foreground 'unspecified))
 
-;;;
-;;; org
-;;;
+;;; org mode setup
+
 (use-package org
+
   :config
 
   ;; turn on variable pitch fonts in Org Mode buffers
   (add-hook 'org-mode-hook 'variable-pitch-mode)
   (add-hook 'org-mode-hook 'jmf/org-code-faces)
 
-(customize-set-variable 'org-directory (expand-file-name "~/org/"))
+  (setopt
+   ;; Define the location of the *org* directory.
+   org-directory (expand-file-name "~/org/")
+   ;; Set to full ISO 8601 date string.
+   org-export-date-timestamp-format "%F"
+   ;; Lock parent TODO items until children are done.
+   org-enforce-todo-dependencies t
+   org-log-into-drawer t
+   org-outline-path-complete-in-steps nil
+   org-priority-faces '((65 . "red"))
+   org-refile-allow-creating-parent-nodes 'confirm
+   org-refile-use-outline-path 'file
+   org-src-preserve-indentation nil
+   org-ellipsis " ▼"
+   evil-auto-indent t
+   org-tags-column -77
+   ;; agenda
+   ;; the agenda file list
+   org-agenda-files (expand-file-name
+                     "agenda.files" org-directory)
+   ;; refile targets
+   org-refile-targets '((org-agenda-files :maxlevel . 6)
+                        (nil :maxlevel . 3))
+   ;; some custom agenda views.
+   org-agenda-custom-commands '(("p" "Planning"
+                                 ((tags-todo "+@planning"
+                                             ((org-agenda-overriding-header
+                                               "Planning Tasks")))
+                                  (tags-todo "-{.*}"
+                                             ((org-agenda-overriding-header
+                                               "Untagged Tasks")))
+                                  (alltodo ""
+                                           ((org-agenda-files '("~/org/inbox.org"))
+                                            (org-agenda-overriding-header
+                                             "Unprocessed Inbox Items")))))
+                                ("i" "Inbox"
+                                 ((alltodo ""
+                                           ((org-agenda-files '("~/org/inbox.org"))
+                                            (org-agenda-overriding-header
+                                             "Unprocessed Inbox Items")))))
+                                ("d" "Daily Agenda"
+                                 ((agenda "" ((org-agenda-span 'day))))))
+   ;; Org capture templates.
+   org-capture-templates '(("n" "Note" entry
+                            (file+headline "inbox.org" "NOTES")
+                            "* %^{Title}\n%?\n\n%a"
+                            :empty-lines 1)
 
-(customize-set-variable 'org-export-date-timestamp-format "%F")
+                           ("j" "Journal entry templates")
+                           ("jp" "Private journal" entry
+                            (file+olp+datetree "journal.org" "JOURNAL")
+                            "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
+                            :empty-lines 1)
+                           ("jw" "Work journal" entry
+                            (file+olp+datetree "work/journal.org")
+                            "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
+                            :empty-lines 1)
 
-(customize-set-variable 'org-enforce-todo-dependencies t)
-(customize-set-variable 'org-log-into-drawer t)
-(customize-set-variable 'org-outline-path-complete-in-steps nil)
-(customize-set-variable 'org-priority-faces (quote ((65 . "red"))))
-(customize-set-variable 'org-refile-allow-creating-parent-nodes 'confirm)
-(customize-set-variable 'org-refile-use-outline-path (quote file))
-(customize-set-variable 'org-src-preserve-indentation nil)
-(customize-set-variable 'org-ellipsis " ▼")
-(customize-set-variable 'evil-auto-indent t)
-(customize-set-variable 'org-tags-column -77)
+                           ("t" "Todo" entry
+                            (file+headline "inbox.org" "TASKS")
+                            "* TODO %^{What?}\n%?\n\n%a"
+                            :empty-lines 1)
 
-(customize-set-variable 'org-agenda-files
-                        (expand-file-name "agenda.files" org-directory))
-(customize-set-variable 'org-refile-targets '((org-agenda-files
-                                               :maxlevel . 6)
-                                              (nil :maxlevel . 3)))
+                           ("c" "Daily todo checklist" checkitem
+                            (file+olp+datetree "daily.org")
+                            "[ ] %^{What?}\n%i\n\n%a"
+                            :empty-lines 1)
 
-(customize-set-variable 'org-agenda-custom-commands
-                        '(("p" "Planning"
-                           ((tags-todo "+@planning"
-                                       ((org-agenda-overriding-header
-                                         "Planning Tasks")))
-                            (tags-todo "-{.*}"
-                                       ((org-agenda-overriding-header
-                                         "Untagged Tasks")))
-                            (alltodo ""
-                                  ((org-agenda-files '("~/org/inbox.org"))
-                                   (org-agenda-overriding-header
-                                    "Unprocessed Inbox Items")))))
-                          ("i" "Inbox"
-                           ((alltodo ""
-                                  ((org-agenda-files '("~/org/inbox.org"))
-                                   (org-agenda-overriding-header
-                                    "Unprocessed Inbox Items")))))
-                          ("d" "Daily Agenda"
-                           ((agenda "" ((org-agenda-span 'day)))))))
+                           ("b" "Book entry templates")
+                           ("bf" "Fiction" entry
+                            (file+olp "todo.org"
+                                      "Reading" "Books" "Fiction")
+                            "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
+                           ("bn" "Non-Fiction" entry
+                            (file+olp "todo.org" "Reading" "Books" "Non-Fiction")
+                            "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
 
-(customize-set-variable 'org-capture-templates
-                        '(("n" "Note" entry
-                           (file+headline "inbox.org" "NOTES")
-                           "* %^{Title}\n%?\n\n%a"
-                           :empty-lines 1)
+                           ("x" "Web capture" entry
+                            (file+headline "inbox.org" "WEB captures")
+                            "* %:annotation\n\n%i\n%?\n%U"
+                            :empty-lines 1)))
+  ;; for centered text using visual fill column mode
+  (setq visual-fill-column-width 110
+        visual-fill-column-center-text t)
 
-                          ("j" "Journal entry templates")
-                          ("jp" "Private journal" entry
-                           (file+olp+datetree "journal.org" "JOURNAL")
-                           "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
-                           :empty-lines 1)
-                          ("jw" "Work journal" entry
-                           (file+olp+datetree "work/journal.org")
-                           "* %^{Title}\n[%<%R%z>]\n\n%?\n\n%a"
-                           :empty-lines 1)
-
-                          ("t" "Todo" entry
-                           (file+headline "inbox.org" "TASKS")
-                           "* TODO %^{What?}\n%?\n\n%a"
-                           :empty-lines 1)
-
-                          ("c" "Daily todo checklist" checkitem
-                           (file+olp+datetree "daily.org")
-                           "[ ] %^{What?}\n%i\n\n%a"
-                           :empty-lines 1)
-
-                          ("b" "Book entry templates")
-                          ("bf" "Fiction" entry
-                           (file+olp "todo.org"
-                                     "Reading" "Books" "Fiction")
-                           "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
-                          ("bn" "Non-Fiction" entry
-                           (file+olp "todo.org" "Reading" "Books" "Non-Fiction")
-                           "* %^{Author}. %^{Title}%^{Publisher}p%^{Year}p%^{ISBN}p\n\n%?")
-
-                          ("x" "Web capture" entry
-                           (file+headline "inbox.org" "WEB captures")
-                           "* %:annotation\n\n%i\n%?\n%U"
-                           :empty-lines 1)))
-
-(setq visual-fill-column-width 110
-      visual-fill-column-center-text t)
-
-:bind (("C-c a" . org-agenda)
-       ("C-c x" . org-capture)
-       ("C-c l" . org-store-link)
-       :map org-mode-map
-       ("C-c L" . org-toggle-link-display)
-       ("C-M-i" . completion-at-point)))
-
-;;;
-;;; evil-org
-;;;
-(use-package evil-org
-  :after org
-  :hook org-mode
-  :config
-  (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys))
+  :bind (("C-c a" . org-agenda)
+         ("C-c x" . org-capture)
+         ("C-c l" . org-store-link)
+         :map org-mode-map
+         ("C-c L" . org-toggle-link-display)
+         ("C-M-i" . completion-at-point)))
 
 ;;;
 ;;; org-roam
@@ -269,6 +261,11 @@
 ;; If using org-roam-protocol
 (use-package org-roam-protocol)
 
+(use-package org-transclusion
+  :after org
+  :bind (("<f12>" . org-transclusion-add)
+         ("C-c t" . org-transclusion-mode)))
+
 ;;
 ;;; org-present
 ;;;
@@ -331,7 +328,7 @@
 (use-package org-modern)
 
 (with-eval-after-load 'outline
-  (add-hook 'ediff-prepare-buffer-hook #'show-all))
+  (add-hook 'ediff-prepare-buffer-hook #'outline-show-all))
 
 (use-package ob-mermaid
   :config

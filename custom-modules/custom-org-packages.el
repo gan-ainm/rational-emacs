@@ -18,6 +18,11 @@
 (add-to-list 'package-selected-packages 'org-modern)
 (add-to-list 'package-selected-packages 'org-present)
 (add-to-list 'package-selected-packages 'org-contrib)
+(add-to-list 'package-selected-packages 'org-transclusion)
+
+(add-to-list 'package-selected-packages 'org-pdftools)
+(add-to-list 'package-selected-packages 'org-noter)
+(add-to-list 'package-selected-packages 'org-noter-pdftools)
 
 ;; more evil
 (add-to-list 'package-selected-packages 'evil-org)

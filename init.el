@@ -1,5 +1,5 @@
 ;;;
-;;; 2025-11-03
+;;; 2025-11-29
 ;;; debug toggles (by uncommenting)
 
 ;; (setq debug-on-quit t)
@@ -60,16 +60,21 @@
 
 ;; the Matrix client
 (add-to-list 'package-selected-packages 'ement)
+
 ;; the virtual terminal
 (add-to-list 'package-selected-packages 'vterm)
+
 ;; the butler for buffers
 (add-to-list 'package-selected-packages 'bufler)
+
 ;; using PDFs with emacs
 (add-to-list 'package-selected-packages 'pdf-tools)
+
 ;; restclient
 (add-to-list 'package-selected-packages 'restclient)
 (add-to-list 'package-selected-packages 'restclient-jq)
 (add-to-list 'package-selected-packages 'ob-restclient)
+
 ;; activities
 (add-to-list 'package-selected-packages 'activities)
 ;; dired additions
@@ -84,6 +89,23 @@
 (add-to-list 'package-selected-packages 'emms-player-simple-mpv)
 ;;; ledger
 (add-to-list 'package-selected-packages 'ledger-mode)
+;;; Yet another snippet extension for Emacs
+(add-to-list 'package-selected-packages 'yasnippet)
+;;; Collection of yasnippet snippets
+(add-to-list 'package-selected-packages 'yasnippet-snippets)
+
+;;; gptel
+(add-to-list 'package-selected-packages 'gptel)
+
+;;; elfeed
+(add-to-list 'package-selected-packages 'elfeed)
+
+;;; elfeed
+(add-to-list 'package-selected-packages 'elfeed-org)
+
+;;; elfeed-score
+(add-to-list 'package-selected-packages 'elfeed-score)
+
 ;;; install all selected packages
 ;;;
 (package-install-selected-packages :noconfirm)
@@ -144,7 +166,7 @@
                 "yapf"
                 "zsh"
                 "~/.local/share/oh-my-zsh/custom"
-                "~/.local/bin")))
+                "~/bin")))
 
 (defun jmf/magit-process-environment (env)
   "Add GIT_DIR and GIT_WORK_TREE to ENV when in a special directory.
@@ -298,6 +320,34 @@ https://github.com/magit/magit/issues/460 (@cpitclaudel)."
           (:maildir "/GMX/Drafts"    :key ?d)
           (:maildir "/GMX/Archives"  :key ?a))))
 
+(use-package elfeed
+  :defer t
+  :config
+  (setq elfeed-feeds
+        '(
+          ("https://www.heise.de/security/feed.xml" heise security)
+          ("https://www.heise.de/developer/feed.xml" heise developer)
+          ("https://kiupdate.podigee.io/feed/mp3.rss" heise ki podcast)
+          ("https://sachachua.com/blog/feed/index.xml" emacs sacha)
+          ("https://planet.emacslife.com/atom.xml" emacs emacslife)
+          ))
+
+  (defface heise-elfeed-entry
+    '((t :background "blue"))
+    "Marks a Heise entry")
+  (push '(heise heise-elfeed-entry)
+        elfeed-search-face-alist)
+
+  (defface emacs-elfeed-entry
+    '((t :background "dark violet"))
+    "Marks an Emacs entry")
+
+  (push '(emacs emacs-elfeed-entry)
+        elfeed-search-face-alist)
+;; (use-package elfeed-org)
+;; (use-package elfeed-score)
+)
+
 ;;;
 ;;; dired-preview
 ;;;
@@ -341,8 +391,8 @@ https://github.com/magit/magit/issues/460 (@cpitclaudel)."
   :init
   (which-key-mode 1))
 
-(require 'ement)
-(require 'vterm)
+(use-package ement)
+(use-package vterm)
 
 (keymap-set evil-normal-state-map "C-," 'embark-act)
 (menu-bar-mode -1)
@@ -357,5 +407,16 @@ https://github.com/magit/magit/issues/460 (@cpitclaudel)."
       nil)))
 
 (use-package csv-mode)
+;;;
+;;; use pdf-tools instead of DocView
+;;;
+(pdf-tools-install)
 
-(customize-set-variable 'calendar-week-start-day 1)
+;;;
+;;; m4 for Babel
+;;;
+(use-package ob-m4
+  :config
+  (add-to-list 'org-babel-load-languages '(m4 . t)))
+
+(setopt calendar-week-start-day 1)
