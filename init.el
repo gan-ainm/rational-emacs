@@ -1,3 +1,5 @@
+;;;
+;;; 2025-11-03
 ;;; debug toggles (by uncommenting)
 
 ;; (setq debug-on-quit t)
@@ -55,6 +57,7 @@
 
 ;; dynamic completion aid for keychords
 (add-to-list 'package-selected-packages 'which-key)
+
 ;; the Matrix client
 (add-to-list 'package-selected-packages 'ement)
 ;; the virtual terminal
@@ -81,7 +84,6 @@
 (add-to-list 'package-selected-packages 'emms-player-simple-mpv)
 ;;; ledger
 (add-to-list 'package-selected-packages 'ledger-mode)
-;;;
 ;;; install all selected packages
 ;;;
 (package-install-selected-packages :noconfirm)
@@ -109,6 +111,8 @@
 (require 'crafted-startup-config)
 
 (require 'custom-org-config)
+
+(require 'custom-completion-config)
 
 (require 'custom-ide-config)
 
