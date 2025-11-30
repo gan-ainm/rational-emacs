@@ -1766,33 +1766,34 @@ The current configuration is using *mbsync* and *mu4e*.
 This is the *elfeed* configuration.
 
 #+begin_src emacs-lisp
-    (use-package elfeed
-      :defer t
-      :config
-      (setq elfeed-feeds
-            '(
-              ("https://www.heise.de/security/feed.xml" heise security)
-              ("https://www.heise.de/developer/feed.xml" heise developer)
-              ("https://kiupdate.podigee.io/feed/mp3.rss" heise ki podcast)
-              ("https://sachachua.com/blog/feed/index.xml" emacs sacha)
-              ("https://planet.emacslife.com/atom.xml" emacs emacslife)
-              ))
+  (use-package elfeed
+    :defer t
+    :config
+    (setq elfeed-feeds
+          '(
+            ("https://www.heise.de/security/feed.xml" heise security)
+            ("https://www.heise.de/developer/feed.xml" heise developer)
+            ("https://kiupdate.podigee.io/feed/mp3.rss" heise ki podcast)
+            ("https://sachachua.com/blog/feed/index.xml" emacs sacha)
+            ("https://planet.emacslife.com/atom.xml" emacs emacslife)
+            ))
 
-      (defface heise-elfeed-entry
-        '((t :background "blue"))
-        "Marks a Heise entry")
-      (push '(heise heise-elfeed-entry)
-            elfeed-search-face-alist)
+    (defface heise-elfeed-entry
+      '((t :background "blue"))
+      "Marks a Heise entry")
+    (push '(heise heise-elfeed-entry)
+          elfeed-search-face-alist)
 
-      (defface emacs-elfeed-entry
-        '((t :background "dark violet"))
-        "Marks an Emacs entry")
+    (defface emacs-elfeed-entry
+      '((t :background "dark violet"))
+      "Marks an Emacs entry")
 
-      (push '(emacs emacs-elfeed-entry)
-            elfeed-search-face-alist)
-    ;; (use-package elfeed-org)
-    ;; (use-package elfeed-score)
-    )
+    (push '(emacs emacs-elfeed-entry)
+          elfeed-search-face-alist)
+  (use-package elfeed-org
+    (elfeed-org)
+    (setq rmh-elfeed-org-files (list "~/.local/share/crafted-emacs/elfeed.org")))
+  ;; (use-package elfeed-score)
 #+end_src
 Dired
 

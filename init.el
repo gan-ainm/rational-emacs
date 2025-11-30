@@ -323,14 +323,15 @@ https://github.com/magit/magit/issues/460 (@cpitclaudel)."
 (use-package elfeed
   :defer t
   :config
-  (setq elfeed-feeds
-        '(
-          ("https://www.heise.de/security/feed.xml" heise security)
-          ("https://www.heise.de/developer/feed.xml" heise developer)
-          ("https://kiupdate.podigee.io/feed/mp3.rss" heise ki podcast)
-          ("https://sachachua.com/blog/feed/index.xml" emacs sacha)
-          ("https://planet.emacslife.com/atom.xml" emacs emacslife)
-          ))
+  ;; (setq elfeed-feeds
+  ;;       '(
+  ;;         ("https://www.heise.de/security/feed.xml" heise security)
+  ;;         ("https://www.heise.de/developer/feed.xml" heise developer)
+  ;;         ("https://kiupdate.podigee.io/feed/mp3.rss" heise ki podcast)
+  ;;         ("https://sachachua.com/blog/feed/index.xml" emacs sacha)
+  ;;         ("https://planet.emacslife.com/atom.xml" emacs emacslife)
+  ;;         ))
+  (setopt elfeed-db-directory "~/.local/state/elfeed")
 
   (defface heise-elfeed-entry
     '((t :background "blue"))
@@ -343,10 +344,15 @@ https://github.com/magit/magit/issues/460 (@cpitclaudel)."
     "Marks an Emacs entry")
 
   (push '(emacs emacs-elfeed-entry)
-        elfeed-search-face-alist)
-;; (use-package elfeed-org)
+        elfeed-search-face-alist))
+
+(use-package elfeed-org
+  :after elfeed
+  :config
+  (elfeed-org)
+  (setq rmh-elfeed-org-files (list "~/.local/share/crafted-emacs/elfeed.org")))
 ;; (use-package elfeed-score)
-)
+
 
 ;;;
 ;;; dired-preview
